@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_card_template"
+    android:id="@+id/menu_card_home"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToOutline="true"
@@ -17,17 +17,17 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/search_card_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Description"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/card_heading_main_act"
-            app:layout_constraintTop_toBottomOf="@+id/card_heading_main_act" />
+            app:layout_constraintStart_toStartOf="@+id/search_card_heading"
+            app:layout_constraintTop_toBottomOf="@+id/search_card_heading" />
 
         <TextView
-            android:id="@+id/card_heading_main_act"
+            android:id="@+id/search_card_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -49,7 +49,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/greater_than_bracket"
+            android:id="@+id/browse_right_arrow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:contentDescription="click_arrow"
