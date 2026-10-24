@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="banner_maroon">#FF641027</color>
+    <color name="activity_bg">#FFFAF7F2</color>
+    <color name="cardview_bg">#FFFFFFFF</color>
+    <color name="icon_grey">#FF666666</color>
 </resources>
