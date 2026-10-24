@@ -23,11 +23,11 @@
             android:layout_marginBottom="8dp"
             android:text="Description"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/search_card_heading"
-            app:layout_constraintTop_toBottomOf="@+id/search_card_heading" />
+            app:layout_constraintStart_toStartOf="@+id/browse_card_heading"
+            app:layout_constraintTop_toBottomOf="@+id/browse_card_heading" />
 
         <TextView
-            android:id="@+id/search_card_heading"
+            android:id="@+id/browse_card_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

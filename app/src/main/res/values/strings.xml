@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Art Institute of Chicago</string>
     <string name="the_art_institute_of_chicago">The Art Institute\n of Chicago</string>
+    <string name="explore_artworks_by_gallery">Explore artworks by gallery</string>
+    <string name="browse_by_gallery">Browse by Gallery</string>
+    <string name="main_activity_card_icon">main activity card icon</string>
+    <string name="click_arrow">click_arrow</string>
+    <string name="right_angle_bracket"><![CDATA[>]]></string>
+    <string name="icon_for_search_card">icon for search card</string>
+    <string name="search_artworks">Search Artworks</string>
+    <string name="find_art_by_keyword">Find art by keyword</string>
 </resources>

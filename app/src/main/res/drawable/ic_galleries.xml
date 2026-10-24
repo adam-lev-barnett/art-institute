@@ -2,12 +2,12 @@
     android:width="24dp" android:height="24dp"
     android:viewportWidth="24" android:viewportHeight="24">
     <path
-        android:fillColor="@color/aic_maroon"
+        android:fillColor="@color/maroon"
         android:pathData="M3,21 H21 V19 H3 Z"/>
     <path
-        android:fillColor="@color/aic_maroon"
+        android:fillColor="@color/maroon"
         android:pathData="M5,18 H7 V10 H5 Z M9,18 H11 V10 H9 Z M13,18 H15 V10 H13 Z M17,18 H19 V10 H17 Z"/>
     <path
-        android:fillColor="@color/aic_maroon"
+        android:fillColor="@color/maroon"
         android:pathData="M2,8 L12,3 L22,8 Z"/>
 </vector>
