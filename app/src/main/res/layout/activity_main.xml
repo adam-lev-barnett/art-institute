@@ -59,7 +59,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/search_card_main_activity"
+        app:layout_constraintBottom_toTopOf="@+id/gallery_card_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/home_subhead"
@@ -122,7 +122,7 @@
 
     <!-- 2. Search Card (Chain Middle) -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/search_card_main_activity"
+        android:id="@+id/gallery_card_layout"
         style="@style/main_activity_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -137,13 +137,13 @@
         app:layout_constraintTop_toBottomOf="@+id/browse_card_main_activity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/search_card_constraint_layout"
+            android:id="@+id/gallery_card_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
 
             <ImageView
-                android:id="@+id/search_card_icon"
+                android:id="@+id/gallery_thumbnail"
                 style="@style/card_icon"
                 android:contentDescription="@string/main_activity_card_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -152,7 +152,7 @@
                 app:srcCompat="@drawable/ic_search" />
 
             <TextView
-                android:id="@+id/search_card_heading"
+                android:id="@+id/gallery_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -162,11 +162,11 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/search_card_arrow"
-                app:layout_constraintStart_toEndOf="@+id/search_card_icon"
+                app:layout_constraintStart_toEndOf="@+id/gallery_thumbnail"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/search_card_description"
+                android:id="@+id/gallery_floor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -174,8 +174,8 @@
                 android:text="@string/find_art_by_keyword"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/search_card_arrow"
-                app:layout_constraintStart_toStartOf="@+id/search_card_heading"
-                app:layout_constraintTop_toBottomOf="@+id/search_card_heading" />
+                app:layout_constraintStart_toStartOf="@+id/gallery_id"
+                app:layout_constraintTop_toBottomOf="@+id/gallery_id" />
 
             <TextView
                 android:id="@+id/search_card_arrow"
@@ -204,7 +204,7 @@
         app:cardCornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_card_main_activity">
+        app:layout_constraintTop_toBottomOf="@+id/gallery_card_layout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/random_card_constraint_layout"

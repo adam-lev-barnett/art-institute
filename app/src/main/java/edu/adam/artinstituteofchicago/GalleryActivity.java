@@ -1,12 +1,15 @@
 package edu.adam.artinstituteofchicago;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import edu.adam.artinstituteofchicago.databinding.ActivityGalleryBinding;
 
 /*
     RecyclerView from API call has GALLERY objects, not artwork
@@ -22,17 +25,29 @@ import androidx.core.view.WindowInsetsCompat;
     -- Galleries icon should be red because currently on it
 
 */
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
+    public ActivityGalleryBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_gallery);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        binding = ActivityGalleryBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        BottomNavBar.setUp(this, binding.bottomNav);
+        setSupportActionBar(binding.topBanner.getRoot());
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+
 }
