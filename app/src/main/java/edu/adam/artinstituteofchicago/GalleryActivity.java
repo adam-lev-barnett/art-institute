@@ -8,8 +8,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.adam.artinstituteofchicago.databinding.ActivityGalleryBinding;
+import edu.adam.artinstituteofchicago.gallerycomponents.GalleryAdapter;
 
 /*
     RecyclerView from API call has GALLERY objects, not artwork
@@ -27,6 +32,9 @@ import edu.adam.artinstituteofchicago.databinding.ActivityGalleryBinding;
 */
 public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
     public ActivityGalleryBinding binding;
+    private LinearLayoutManager linearLayoutManager;
+    private GalleryAdapter adapter;
+    private final List<Gallery> galleries = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,13 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
         BottomNavBar.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
+    }
+
+    private void setUpGalleryRecycler() {
+        this.adapter = new GalleryAdapter(galleries, this);
+        this.linearLayoutManager = new LinearLayoutManager(this);
+        binding.galleryRecycler.setAdapter(adapter);
+        binding.galleryRecycler.setLayoutManager(linearLayoutManager);
     }
 
     @Override

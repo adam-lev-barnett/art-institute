@@ -40,15 +40,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
         Gallery gallery = galleries.get(position);
         holder.binding.galleryId.setText(gallery.getName());
 
-        // Rows get recycled, so the floor must be set (or cleared) every time
         if (gallery.getFloor().isEmpty()) {
             holder.binding.galleryFloor.setText("");
         } else {
-            holder.binding.galleryFloor.setText(
-                    galleryAct.getString(R.string.floor_label, gallery.getFloor()));
+            holder.binding.galleryFloor.setText(galleryAct.getString(R.string.floor_label, gallery.getFloor()));
         }
-
-
     }
 
     @Override
