@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Art Institute of Chicago</string>
-    <string name="the_art_institute_of_chicago">The Art Institute\n of Chicago</string>
+    <string name="the_art_institute_of_chicago">The Art Institute\nof Chicago</string>
+    <string name="aic_logo">Art Institute of Chicago logo</string>
     <string name="explore_artworks_by_gallery">Explore artworks by gallery</string>
     <string name="browse_by_gallery">Browse by Gallery</string>
     <string name="main_activity_card_icon">main activity card icon</string>
@@ -9,4 +10,10 @@
     <string name="icon_for_search_card">icon for search card</string>
     <string name="search_artworks">Search Artworks</string>
     <string name="find_art_by_keyword">Find art by keyword</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_galleries">Galleries</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_random">Random artwork</string>
+    <string name="galleries">Galleries</string>
 </resources>
