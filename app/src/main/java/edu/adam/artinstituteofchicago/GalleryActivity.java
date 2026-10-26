@@ -50,6 +50,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
         BottomNavBar.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
+        setUpGalleryRecycler();
     }
 
     private void setUpGalleryRecycler() {
