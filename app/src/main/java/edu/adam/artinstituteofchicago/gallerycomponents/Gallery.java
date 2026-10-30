@@ -7,31 +7,31 @@ import java.io.Serializable;
 public class Gallery implements Serializable {
 
     private final long id;
-    private final String name;
+    private final String title;
     private final String number;
     private final String floor;
-    private final boolean closed;
-    private final String lastUpdate;
+    private final boolean is_closed;
+    private final String source_updated_at;
 
     // Not part of the galleries response: the first artwork returned for this gallery
     private String imageId = "";
 
-    public Gallery(long id, String name, String number, String floor,
-                   boolean closed, String lastUpdate) {
+    public Gallery(long id, String title, String number, String floor,
+                   boolean is_closed, String lastUpdate) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.number = number;
         this.floor = floor;
-        this.closed = closed;
-        this.lastUpdate = lastUpdate;
+        this.is_closed = is_closed;
+        this.source_updated_at = lastUpdate;
     }
 
     public long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public String getNumber() {
@@ -42,12 +42,12 @@ public class Gallery implements Serializable {
         return floor;
     }
 
-    public boolean isClosed() {
-        return closed;
+    public boolean isIs_closed() {
+        return is_closed;
     }
 
-    public String getLastUpdate() {
-        return lastUpdate;
+    public String getSource_updated_at() {
+        return source_updated_at;
     }
 
     public String getImageId() {

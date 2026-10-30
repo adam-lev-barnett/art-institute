@@ -37,7 +37,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull GalleryViewHolder holder, int position) {
         Gallery gallery = galleries.get(position);
-        holder.binding.galleryId.setText(gallery.getName());
+        holder.binding.galleryId.setText(gallery.getTitle());
 
         if (gallery.getFloor().isEmpty()) {
             holder.binding.galleryFloor.setText("");

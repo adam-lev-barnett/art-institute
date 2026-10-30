@@ -77,13 +77,13 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
 
         if (gallery.getFloor().isEmpty()) {
             binding.artworksSummary.setText(getString(R.string.artwork_list_summary_no_floor,
-                    gallery.getName(), artworks.size()));
+                    gallery.getTitle(), artworks.size()));
         } else {
             binding.artworksSummary.setText(getString(R.string.artwork_list_summary,
-                    gallery.getName(), gallery.getFloor(), artworks.size()));
+                    gallery.getTitle(), gallery.getFloor(), artworks.size()));
         }
 
-        binding.lastUpdate.setText(getString(R.string.last_update, gallery.getLastUpdate()));
+        binding.lastUpdate.setText(getString(R.string.last_update, gallery.getSource_updated_at()));
     }
 
     @Override

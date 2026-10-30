@@ -96,7 +96,6 @@ public class GalleryDownloader {
                 };
 
         rq.add(request);
-        loadNextPageIfPresent(query);
     }
 
     private static List<Gallery> parseJsonArray(String jsonString) throws JSONException {
@@ -138,18 +137,18 @@ public class GalleryDownloader {
     /** Builds Gallery from JSONObject with available fields; returns empty strings if field not available*/
     private static Gallery galleryFactory(JSONObject json) throws JSONException {
         long id = json.getLong("id");
-        String name = "";
+        String title = "";
         String number = "";
         String floor = "";
-        boolean closed = json.optBoolean("is_closed", false);
-        String lastUpdate = "";
+        boolean is_closed = json.optBoolean("is_closed", false);
+        String source_updated_at = "";
 
-        if (json.has("name")) name = json.getString("name");
+        if (json.has("title")) title = json.getString("title");
         if (json.has("number")) number = json.getString("number");
         if (json.has("floor")) floor = json.getString("floor");
-        if (json.has("lastUpdate")) lastUpdate = json.getString("lastUpdate");
+        if (json.has("source_updated_at")) source_updated_at = json.getString("source_updated_at");
 
-        return new Gallery(id, name, number, floor, closed, lastUpdate);
+        return new Gallery(id, title, number, floor, is_closed, source_updated_at);
     }
 
     /** Only parses the data if it exists */
@@ -164,6 +163,8 @@ public class GalleryDownloader {
         if (galleryList != null) activity.runOnUiThread(() -> {
             activity.updateData(galleryList);
         });
+
+        loadNextPageIfPresent(json);
     }
 
     /** Passes error toast handling to activity */
