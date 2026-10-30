@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.adam.artinstituteofchicago.Gallery;
 import edu.adam.artinstituteofchicago.GalleryActivity;
 import edu.adam.artinstituteofchicago.R;
 import edu.adam.artinstituteofchicago.databinding.GalleryListRowBinding;

@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.adam.artinstituteofchicago.artworkcomponents.Artwork;
 import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkAdapter;
 import edu.adam.artinstituteofchicago.databinding.ActivityArtworkListBinding;
+import edu.adam.artinstituteofchicago.gallerycomponents.Gallery;
+import edu.adam.artinstituteofchicago.uicomponents.BottomNavBar;
 
 /*
     Opened by tapping a gallery in GalleryActivity (Gallery passed in with putExtra)
@@ -87,6 +90,6 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         int pos = binding.artworkRecycler.getChildLayoutPosition(v);
         Artwork artwork = artworks.get(pos);
-        // Open ArtworkDetailActivity with this artwork (next step)
+        //TODO Open ArtworkDetailActivity with this artwork (next step)
     }
 }

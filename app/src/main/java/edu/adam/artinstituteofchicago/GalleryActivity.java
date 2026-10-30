@@ -2,6 +2,7 @@ package edu.adam.artinstituteofchicago;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.adam.artinstituteofchicago.databinding.ActivityGalleryBinding;
+import edu.adam.artinstituteofchicago.gallerycomponents.Gallery;
 import edu.adam.artinstituteofchicago.gallerycomponents.GalleryAdapter;
+import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader;
+import edu.adam.artinstituteofchicago.uicomponents.BottomNavBar;
 
 /*
     RecyclerView from API call has GALLERY objects, not artwork
@@ -51,6 +55,7 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         BottomNavBar.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
         setUpGalleryRecycler();
+        GalleryDownloader.getSourceData(this);
     }
 
     private void setUpGalleryRecycler() {
@@ -66,4 +71,17 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    public void downloadFailed(String errMessage) {
+        String message = (
+                errMessage == null ?
+                        getString(R.string.download_failed) :
+                        errMessage);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    public void updateData(List<Gallery> galleryList) {
+        galleries.clear();
+        galleries.addAll(galleryList);
+        adapter.notifyDataSetChanged();
+    }
 }

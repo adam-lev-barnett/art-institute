@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    tools:context=".MainActivity">
+
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_banner"
+        app:srcCompat="@drawable/main_bg" />
+
+    <TextView
+        android:id="@+id/heading_explore_art"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Explore Art"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textStyle="bold"
+        android:typeface="serif"
+        app:layout_constraintBottom_toTopOf="@+id/home_subhead"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/home_subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Discover thousands of artworks from around the world"
+        app:layout_constraintEnd_toEndOf="@+id/heading_explore_art"
+        app:layout_constraintStart_toStartOf="@+id/heading_explore_art"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <!-- 1. Browse Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/browse_card_main_activity"
+        style="@style/main_activity_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/gallery_card_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_subhead"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/browse_card_constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/browse_card_icon"
+                style="@style/card_icon"
+                android:contentDescription="@string/main_activity_card_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_galleries" />
+
+            <TextView
+                android:id="@+id/browse_card_heading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="serif"
+                android:text="@string/browse_by_gallery"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/browse_card_arrow"
+                app:layout_constraintStart_toEndOf="@+id/browse_card_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/browse_card_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/explore_artworks_by_gallery"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/browse_card_arrow"
+                app:layout_constraintStart_toStartOf="@+id/browse_card_heading"
+                app:layout_constraintTop_toBottomOf="@+id/browse_card_heading" />
+
+            <TextView
+                android:id="@+id/browse_card_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/click_arrow"
+                android:text="@string/right_angle_bracket"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- 2. Search Card (Chain Middle) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/gallery_card_layout"
+        style="@style/main_activity_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/random_card_main_activity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/browse_card_main_activity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/gallery_card_constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/gallery_thumbnail"
+                style="@style/card_icon"
+                android:contentDescription="@string/main_activity_card_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_search" />
+
+            <TextView
+                android:id="@+id/gallery_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="serif"
+                android:text="@string/search_artworks"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/search_card_arrow"
+                app:layout_constraintStart_toEndOf="@+id/gallery_thumbnail"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gallery_floor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/find_art_by_keyword"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/search_card_arrow"
+                app:layout_constraintStart_toStartOf="@+id/gallery_id"
+                app:layout_constraintTop_toBottomOf="@+id/gallery_id" />
+
+            <TextView
+                android:id="@+id/search_card_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/click_arrow"
+                android:text="@string/right_angle_bracket"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Random Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/random_card_main_activity"
+        style="@style/main_activity_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+
+        app:cardCornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gallery_card_layout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/random_card_constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/random_card_icon"
+                style="@style/card_icon"
+                android:contentDescription="@string/main_activity_card_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/random_grey" />
+
+            <TextView
+                android:id="@+id/random_card_heading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="serif"
+                android:text="Random Artwork"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/random_card_arrow"
+                app:layout_constraintStart_toEndOf="@+id/random_card_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/random_card_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/find_art_by_keyword"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/random_card_arrow"
+                app:layout_constraintStart_toStartOf="@+id/random_card_heading"
+                app:layout_constraintTop_toBottomOf="@+id/random_card_heading" />
+
+            <TextView
+                android:id="@+id/random_card_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/click_arrow"
+                android:text="@string/right_angle_bracket"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <include
+        android:id="@+id/top_banner"
+        layout="@layout/top_banner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

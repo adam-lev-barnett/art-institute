@@ -1,4 +1,4 @@
-package edu.adam.artinstituteofchicago;
+package edu.adam.artinstituteofchicago.artworkcomponents;
 
 import java.io.Serializable;
 

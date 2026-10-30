@@ -1,7 +1,6 @@
 package edu.adam.artinstituteofchicago;
 
 import android.os.Bundle;
-import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import edu.adam.artinstituteofchicago.databinding.ActivityMainBinding;
+import edu.adam.artinstituteofchicago.uicomponents.BottomNavBar;
 
 
 public class MainActivity extends AppCompatActivity {

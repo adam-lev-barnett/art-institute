@@ -22,4 +22,7 @@
     <string name="artwork_list_summary">%1$s • Floor %2$s • %3$d artworks</string>
     <string name="artwork_list_summary_no_floor">%1$s • %2$d artworks</string>
     <string name="last_update">Last update: %1$s</string>
+    <string name="page_limit">100</string>
+    <string name="starting_page_number">1</string>
+    <string name="download_failed">Could not load galleries</string>
 </resources>

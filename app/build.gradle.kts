@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.cardview)
     implementation(libs.constraintlayout)
+    implementation(libs.volley)
     implementation(libs.gson)
     implementation(libs.recyclerview)
     implementation(libs.material)

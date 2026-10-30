@@ -10,6 +10,7 @@ constraintlayout = "2.2.2"
 cardview = "1.0.0"
 gson = "2.14.0"
 recyclerview = "1.4.0"
+volley = "1.2.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -22,6 +23,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

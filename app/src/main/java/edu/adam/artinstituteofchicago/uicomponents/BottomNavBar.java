@@ -1,8 +1,14 @@
-package edu.adam.artinstituteofchicago;
+package edu.adam.artinstituteofchicago.uicomponents;
 
 import android.app.Activity;
 import android.content.Intent;
 
+import edu.adam.artinstituteofchicago.ArtworkDetailActivity;
+import edu.adam.artinstituteofchicago.FavoritesActivity;
+import edu.adam.artinstituteofchicago.GalleryActivity;
+import edu.adam.artinstituteofchicago.MainActivity;
+import edu.adam.artinstituteofchicago.R;
+import edu.adam.artinstituteofchicago.SearchActivity;
 import edu.adam.artinstituteofchicago.databinding.BottomNavigationBinding;
 
 public class BottomNavBar {
