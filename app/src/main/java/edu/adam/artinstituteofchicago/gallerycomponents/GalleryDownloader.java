@@ -28,33 +28,39 @@ public class GalleryDownloader {
     private static final String TAG = "GalleryDownloader";
     private static final String BASE_URL = "https://api.artic.edu/api/v1/galleries";
     private static final String FIELDS = "id,title,number,floor,is_closed,source_updated_at";
+    private static String startingPage = "1";
+    private static RequestQueue rq;
+    private static Response.Listener<JSONObject> listener;
+    private static Response.ErrorListener errorListener;
 
     private static String buildUrl() {
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("fields", FIELDS)
+                // How many items per page
                 .appendQueryParameter("limit", galleryActivity.getString(R.string.page_limit))
-                .appendQueryParameter("page", galleryActivity.getString(R.string.starting_page_number))
+                // start at page one
+                .appendQueryParameter("page", startingPage)
                 .build()
                 .toString();
     }
 
     public static void getSourceData(GalleryActivity activity) {
         galleryActivity = activity;
-        RequestQueue rq = Volley.newRequestQueue(galleryActivity);
+        if (rq == null) rq = Volley.newRequestQueue(galleryActivity);
 
-        Response.Listener<JSONObject> listener =
-                response -> {
-                    try {
-                        handleResults(galleryActivity, response.toString());
-                    } catch (JSONException e) {
-                        Toast.makeText(galleryActivity, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                };
+        listener = response -> {
+            try {
+                handleResults(galleryActivity, response.toString());
+            } catch (JSONException e) {
+                Toast.makeText(galleryActivity, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        };
 
-        Response.ErrorListener error = err -> {
+        errorListener = err -> {
             String message = err.getMessage();
             if (err.networkResponse != null && err.networkResponse.data != null) {
                 try {
+                    // Build error json object
                     JSONObject errorJson = new JSONObject(new String(err.networkResponse.data));
                     message = errorJson.getString("message");
                 } catch (JSONException ignored) {
@@ -66,8 +72,14 @@ public class GalleryDownloader {
 
         String queryUrl = buildUrl();
 
+
+
+        requestGET(queryUrl);
+    }
+
+    private static void requestGET(String query) {
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, queryUrl, null, listener, error) {
+                new JsonObjectRequest(Request.Method.GET, query, null, listener, errorListener) {
 
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -84,6 +96,7 @@ public class GalleryDownloader {
                 };
 
         rq.add(request);
+        loadNextPageIfPresent(query);
     }
 
     private static List<Gallery> parseJsonArray(String jsonString) throws JSONException {
@@ -111,6 +124,17 @@ public class GalleryDownloader {
         return null;
     }
 
+    private static void loadNextPageIfPresent(String jsonString) {
+        try {
+            JSONObject response = new JSONObject(jsonString);
+            JSONObject pagination = response.getJSONObject("pagination");
+            if (pagination.has("next_url")) requestGET(pagination.getString("next_url"));
+
+        } catch (JSONException e) {
+            handleError(galleryActivity, "Error interpreting pagination");
+        }
+    }
+
     /** Builds Gallery from JSONObject with available fields; returns empty strings if field not available*/
     private static Gallery galleryFactory(JSONObject json) throws JSONException {
         long id = json.getLong("id");
@@ -128,6 +152,7 @@ public class GalleryDownloader {
         return new Gallery(id, name, number, floor, closed, lastUpdate);
     }
 
+    /** Only parses the data if it exists */
     private static void handleResults(GalleryActivity activity, String json) throws JSONException {
         if (json == null) {
             handleError(activity, null);
@@ -141,6 +166,7 @@ public class GalleryDownloader {
         });
     }
 
+    /** Passes error toast handling to activity */
     private static void handleError(GalleryActivity activity, String errorMsg) {
         activity.runOnUiThread(() -> activity.downloadFailed(errorMsg));
     }
