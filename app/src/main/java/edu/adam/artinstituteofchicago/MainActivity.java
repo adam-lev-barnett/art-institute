@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import edu.adam.artinstituteofchicago.databinding.ActivityMainBinding;
-import edu.adam.artinstituteofchicago.uicomponents.BottomNavBar;
+import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Utility class to set up the bottom nav bar based on the calling activity
-        BottomNavBar.setUp(this, binding.bottomNav);
+        BottomNavigation.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
     }
 }

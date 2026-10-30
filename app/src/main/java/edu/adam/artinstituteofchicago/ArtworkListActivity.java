@@ -17,7 +17,7 @@ import edu.adam.artinstituteofchicago.artworkcomponents.Artwork;
 import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkAdapter;
 import edu.adam.artinstituteofchicago.databinding.ActivityArtworkListBinding;
 import edu.adam.artinstituteofchicago.gallerycomponents.Gallery;
-import edu.adam.artinstituteofchicago.uicomponents.BottomNavBar;
+import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 
 /*
     Opened by tapping a gallery in GalleryActivity (Gallery passed in with putExtra)
@@ -51,7 +51,7 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
             return insets;
         });
 
-        BottomNavBar.setUp(this, binding.bottomNav);
+        BottomNavigation.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
 
         if (getIntent().hasExtra(EXTRA_GALLERY)) {

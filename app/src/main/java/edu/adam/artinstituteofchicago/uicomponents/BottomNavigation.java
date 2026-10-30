@@ -11,7 +11,7 @@ import edu.adam.artinstituteofchicago.R;
 import edu.adam.artinstituteofchicago.SearchActivity;
 import edu.adam.artinstituteofchicago.databinding.BottomNavigationBinding;
 
-public class BottomNavBar {
+public class BottomNavigation {
 
     /** Global setup for each activity's bottom nav bar to centralize logic.
      * The calling activity passes itself and the binding to directly access the bottom navigation's custom layout.

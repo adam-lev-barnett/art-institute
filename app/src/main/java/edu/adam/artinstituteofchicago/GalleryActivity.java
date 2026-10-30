@@ -15,10 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.adam.artinstituteofchicago.databinding.ActivityGalleryBinding;
+import edu.adam.artinstituteofchicago.databinding.BottomNavigationBinding;
 import edu.adam.artinstituteofchicago.gallerycomponents.Gallery;
 import edu.adam.artinstituteofchicago.gallerycomponents.GalleryAdapter;
 import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader;
-import edu.adam.artinstituteofchicago.uicomponents.BottomNavBar;
+import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 
 /*
     RecyclerView from API call has GALLERY objects, not artwork
@@ -35,7 +36,7 @@ import edu.adam.artinstituteofchicago.uicomponents.BottomNavBar;
 
 */
 public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
-    public ActivityGalleryBinding binding;
+    public ActivityGalleryBinding galleryBinding;
     private LinearLayoutManager linearLayoutManager;
     private GalleryAdapter adapter;
     private final List<Gallery> galleries = new ArrayList<>();
@@ -44,16 +45,16 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding = ActivityGalleryBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
+        galleryBinding = ActivityGalleryBinding.inflate(getLayoutInflater());
+        setContentView(galleryBinding.getRoot());
+        ViewCompat.setOnApplyWindowInsetsListener(galleryBinding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        BottomNavBar.setUp(this, binding.bottomNav);
-        setSupportActionBar(binding.topBanner.getRoot());
+        BottomNavigation.setUp(this, galleryBinding.bottomNav);
+        setSupportActionBar(galleryBinding.topBanner.getRoot());
         setUpGalleryRecycler();
         GalleryDownloader.getSourceData(this);
     }
@@ -61,8 +62,8 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     private void setUpGalleryRecycler() {
         this.adapter = new GalleryAdapter(galleries, this);
         this.linearLayoutManager = new LinearLayoutManager(this);
-        binding.galleryRecycler.setAdapter(adapter);
-        binding.galleryRecycler.setLayoutManager(linearLayoutManager);
+        galleryBinding.galleryRecycler.setAdapter(adapter);
+        galleryBinding.galleryRecycler.setLayoutManager(linearLayoutManager);
     }
 
     @Override
@@ -80,8 +81,9 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void updateData(List<Gallery> galleryList) {
-        galleries.clear();
+        // Called once per page, so append rather than replace
+        int start = galleries.size();
         galleries.addAll(galleryList);
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemRangeInserted(start, galleryList.size());
     }
 }

@@ -25,23 +25,30 @@ import edu.adam.artinstituteofchicago.R;
 
 public class GalleryDownloader {
     private static GalleryActivity galleryActivity;
+    private static RequestQueue requestQueue;
     private static final String TAG = "GalleryDownloader";
     private static final String BASE_URL = "https://api.artic.edu/api/v1/galleries";
     private static final String FIELDS = "id,title,number,floor,is_closed,source_updated_at";
 
-    private static String buildUrl() {
+    private static String buildUrl(int page) {
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("fields", FIELDS)
                 .appendQueryParameter("limit", galleryActivity.getString(R.string.page_limit))
-                .appendQueryParameter("page", galleryActivity.getString(R.string.starting_page_number))
+                .appendQueryParameter("page", String.valueOf(page))
                 .build()
                 .toString();
     }
 
     public static void getSourceData(GalleryActivity activity) {
         galleryActivity = activity;
-        RequestQueue rq = Volley.newRequestQueue(galleryActivity);
+        requestQueue = Volley.newRequestQueue(galleryActivity);
 
+        int firstPage = Integer.parseInt(activity.getString(R.string.starting_page_number));
+        requestPage(firstPage);
+    }
+
+    // Each response requests the next page until the end of the API's list
+    private static void requestPage(int page) {
         Response.Listener<JSONObject> listener =
                 response -> {
                     try {
@@ -53,19 +60,18 @@ public class GalleryDownloader {
 
         Response.ErrorListener error = err -> {
             String message = err.getMessage();
-            // networkResponse is null on timeouts / no connection
             if (err.networkResponse != null && err.networkResponse.data != null) {
                 try {
                     JSONObject errorJson = new JSONObject(new String(err.networkResponse.data));
                     message = errorJson.getString("message");
                 } catch (JSONException ignored) {
-                    // Body wasn't JSON (e.g. an HTML error page); keep Volley's message
+                    // The volley error handler already sends out the toast
                 }
             }
             handleError(galleryActivity, message);
         };
 
-        String queryUrl = buildUrl();
+        String queryUrl = buildUrl(page);
 
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.GET, queryUrl, null, listener, error) {
@@ -84,7 +90,7 @@ public class GalleryDownloader {
                     }
                 };
 
-        rq.add(request);
+        requestQueue.add(request);
     }
 
     private static List<Gallery> parseJsonArray(String jsonString) throws JSONException {
@@ -139,6 +145,14 @@ public class GalleryDownloader {
         if (galleryList != null) activity.runOnUiThread(() -> {
             activity.updateData(galleryList);
         });
+
+        JSONObject pagination = new JSONObject(json).getJSONObject("pagination");
+        int currentPage = pagination.getInt("current_page");
+        int totalPages = pagination.getInt("total_pages");
+
+        if (currentPage < totalPages) {
+            requestPage(currentPage + 1);
+        }
     }
 
     private static void handleError(GalleryActivity activity, String errorMsg) {
