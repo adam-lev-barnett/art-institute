@@ -81,9 +81,8 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void updateData(List<Gallery> galleryList) {
-        // Called once per page, so append rather than replace
-        int start = galleries.size();
+        galleries.clear();
         galleries.addAll(galleryList);
-        adapter.notifyItemRangeInserted(start, galleryList.size());
+        adapter.notifyDataSetChanged();
     }
 }

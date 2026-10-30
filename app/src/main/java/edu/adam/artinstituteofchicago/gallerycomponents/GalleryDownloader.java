@@ -25,30 +25,23 @@ import edu.adam.artinstituteofchicago.R;
 
 public class GalleryDownloader {
     private static GalleryActivity galleryActivity;
-    private static RequestQueue requestQueue;
     private static final String TAG = "GalleryDownloader";
     private static final String BASE_URL = "https://api.artic.edu/api/v1/galleries";
     private static final String FIELDS = "id,title,number,floor,is_closed,source_updated_at";
 
-    private static String buildUrl(int page) {
+    private static String buildUrl() {
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("fields", FIELDS)
                 .appendQueryParameter("limit", galleryActivity.getString(R.string.page_limit))
-                .appendQueryParameter("page", String.valueOf(page))
+                .appendQueryParameter("page", galleryActivity.getString(R.string.starting_page_number))
                 .build()
                 .toString();
     }
 
     public static void getSourceData(GalleryActivity activity) {
         galleryActivity = activity;
-        requestQueue = Volley.newRequestQueue(galleryActivity);
+        RequestQueue rq = Volley.newRequestQueue(galleryActivity);
 
-        int firstPage = Integer.parseInt(activity.getString(R.string.starting_page_number));
-        requestPage(firstPage);
-    }
-
-    // Each response requests the next page until the end of the API's list
-    private static void requestPage(int page) {
         Response.Listener<JSONObject> listener =
                 response -> {
                     try {
@@ -71,7 +64,7 @@ public class GalleryDownloader {
             handleError(galleryActivity, message);
         };
 
-        String queryUrl = buildUrl(page);
+        String queryUrl = buildUrl();
 
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.GET, queryUrl, null, listener, error) {
@@ -90,7 +83,7 @@ public class GalleryDownloader {
                     }
                 };
 
-        requestQueue.add(request);
+        rq.add(request);
     }
 
     private static List<Gallery> parseJsonArray(String jsonString) throws JSONException {
@@ -145,14 +138,6 @@ public class GalleryDownloader {
         if (galleryList != null) activity.runOnUiThread(() -> {
             activity.updateData(galleryList);
         });
-
-        JSONObject pagination = new JSONObject(json).getJSONObject("pagination");
-        int currentPage = pagination.getInt("current_page");
-        int totalPages = pagination.getInt("total_pages");
-
-        if (currentPage < totalPages) {
-            requestPage(currentPage + 1);
-        }
     }
 
     private static void handleError(GalleryActivity activity, String errorMsg) {
