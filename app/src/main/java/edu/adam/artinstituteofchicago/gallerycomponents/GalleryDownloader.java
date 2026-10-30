@@ -111,20 +111,21 @@ public class GalleryDownloader {
         return null;
     }
 
+    /** Builds Gallery from JSONObject with available fields; returns empty strings if field not available*/
     private static Gallery galleryFactory(JSONObject json) throws JSONException {
         long id = json.getLong("id");
-        String name = getStringOrEmpty(json, "title");
-        String number = getStringOrEmpty(json, "number");
-        String floor = getStringOrEmpty(json, "floor");
+        String name = "";
+        String number = "";
+        String floor = "";
         boolean closed = json.optBoolean("is_closed", false);
-        String lastUpdate = getStringOrEmpty(json, "source_updated_at");
+        String lastUpdate = "";
+
+        if (json.has("name")) name = json.getString("name");
+        if (json.has("number")) number = json.getString("number");
+        if (json.has("floor")) floor = json.getString("floor");
+        if (json.has("lastUpdate")) lastUpdate = json.getString("lastUpdate");
 
         return new Gallery(id, name, number, floor, closed, lastUpdate);
-    }
-
-    // isNull covers both a missing key and a JSON null (optString would return "null" for the latter)
-    private static String getStringOrEmpty(JSONObject json, String key) throws JSONException {
-        return json.isNull(key) ? "" : json.getString(key);
     }
 
     private static void handleResults(GalleryActivity activity, String json) throws JSONException {
