@@ -80,13 +80,24 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
 
         binding.artworksGalleryTitle.setText(gallery.getTitle());
 
+        // Floor and its dot hide together; the count's dot then sits right after the title
         if (gallery.getFloor().isEmpty()) {
+            binding.floorDot.setVisibility(View.GONE);
             binding.artworksFloor.setVisibility(View.GONE);
         } else {
             binding.artworksFloor.setText(getString(R.string.floor_label, gallery.getFloor()));
         }
 
-        binding.lastUpdate.setText(getString(R.string.last_update, gallery.getSource_updated_at()));
+        // No count until artworks arrive. INVISIBLE, not GONE: the RecyclerView is
+        // constrained below the count, so the count has to keep its space
+        binding.artworkCountDot.setVisibility(View.INVISIBLE);
+        binding.artworksCount.setVisibility(View.INVISIBLE);
+
+        if (gallery.getSource_updated_at().isEmpty()) {
+            binding.lastUpdate.setVisibility(View.GONE);
+        } else {
+            binding.lastUpdate.setText(getString(R.string.last_update, gallery.getSource_updated_at()));
+        }
     }
 
     @Override
@@ -103,6 +114,8 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
 
         // Runs once per page, so the count grows as pages load
         binding.artworksCount.setText(getString(R.string.artwork_count, artworks.size()));
+        binding.artworkCountDot.setVisibility(View.VISIBLE);
+        binding.artworksCount.setVisibility(View.VISIBLE);
     }
 
     public void updateGalleryThumbnail(int position) {

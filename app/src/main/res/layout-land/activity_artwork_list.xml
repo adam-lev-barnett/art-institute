@@ -27,13 +27,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Heading and gallery info in a left column so the list gets the full height between the banner and the nav -->
+    <!-- Heading and last update in a left column; gallery info line and list on the right,
+         so the list gets almost the full height between the banner and the nav -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/artworks_split_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.25" />
 
     <TextView
         android:id="@+id/artworks_heading"
@@ -52,35 +53,6 @@
         app:layout_constraintTop_toBottomOf="@id/top_banner" />
 
     <TextView
-        android:id="@+id/artworks_gallery_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/artworks_heading"
-        app:layout_constraintStart_toStartOf="@id/artworks_heading"
-        app:layout_constraintTop_toBottomOf="@id/artworks_heading"
-        tools:text="Gallery 240" />
-
-    <TextView
-        android:id="@+id/artworks_floor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@id/artworks_heading"
-        app:layout_constraintStart_toStartOf="@id/artworks_heading"
-        app:layout_constraintTop_toBottomOf="@id/artworks_gallery_title"
-        tools:text="Floor 2" />
-
-    <TextView
-        android:id="@+id/artworks_count"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@id/artworks_heading"
-        app:layout_constraintStart_toStartOf="@id/artworks_heading"
-        app:layout_constraintTop_toBottomOf="@id/artworks_floor"
-        tools:text="13 artworks" />
-
-    <TextView
         android:id="@+id/last_update"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -89,19 +61,67 @@
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="@id/artworks_heading"
         app:layout_constraintStart_toStartOf="@id/artworks_heading"
-        app:layout_constraintTop_toBottomOf="@id/artworks_count"
+        app:layout_constraintTop_toBottomOf="@id/artworks_heading"
         tools:text="Last update: 2022-04-15T16:40:14-05:00" />
+
+    <!-- Gallery info on one line: title • floor • count. Hiding a dot and its field
+         together collapses them, so the next dot moves up next to the title -->
+    <TextView
+        android:id="@+id/artworks_gallery_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@id/artworks_split_guideline"
+        app:layout_constraintTop_toBottomOf="@id/top_banner"
+        tools:text="Gallery 240" />
+
+    <TextView
+        android:id="@+id/floor_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/info_separator"
+        app:layout_constraintStart_toEndOf="@id/artworks_gallery_title"
+        app:layout_constraintTop_toTopOf="@id/artworks_gallery_title" />
+
+    <TextView
+        android:id="@+id/artworks_floor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/floor_dot"
+        app:layout_constraintTop_toTopOf="@id/artworks_gallery_title"
+        tools:text="Floor 2" />
+
+    <TextView
+        android:id="@+id/artwork_count_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/info_separator"
+        app:layout_constraintStart_toEndOf="@id/artworks_floor"
+        app:layout_constraintTop_toTopOf="@id/artworks_gallery_title" />
+
+    <TextView
+        android:id="@+id/artworks_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/artwork_count_dot"
+        app:layout_constraintTop_toTopOf="@id/artworks_gallery_title"
+        tools:text="13 artworks" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/artwork_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:overScrollMode="ifContentScrolls"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/artworks_split_guideline"
-        app:layout_constraintTop_toBottomOf="@id/top_banner" />
+        app:layout_constraintTop_toBottomOf="@id/artworks_gallery_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

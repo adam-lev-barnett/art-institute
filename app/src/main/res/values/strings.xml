@@ -20,6 +20,7 @@
     <string name="artworks">Artworks</string>
     <string name="artwork_thumbnail">Artwork thumbnail</string>
     <string name="artwork_count">%1$d artworks</string>
+    <string name="info_separator">•</string>
     <string name="last_update">Last update: %1$s</string>
     <string name="page_limit">100</string>
     <string name="download_failed">Could not load galleries</string>
