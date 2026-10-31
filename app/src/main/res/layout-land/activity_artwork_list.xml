@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    tools:context=".ArtworkListActivity">
+
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/top_banner"
+        layout="@layout/top_banner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Heading and gallery info in a left column so the list gets the full height between the banner and the nav -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/artworks_split_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <TextView
+        android:id="@+id/artworks_heading"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="serif"
+        android:text="@string/artworks"
+        android:textColor="@color/maroon"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/artworks_split_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_banner" />
+
+    <TextView
+        android:id="@+id/artworks_gallery_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/artworks_heading"
+        app:layout_constraintStart_toStartOf="@id/artworks_heading"
+        app:layout_constraintTop_toBottomOf="@id/artworks_heading"
+        tools:text="Gallery 240" />
+
+    <TextView
+        android:id="@+id/artworks_floor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/artworks_heading"
+        app:layout_constraintStart_toStartOf="@id/artworks_heading"
+        app:layout_constraintTop_toBottomOf="@id/artworks_gallery_title"
+        tools:text="Floor 2" />
+
+    <TextView
+        android:id="@+id/artworks_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/artworks_heading"
+        app:layout_constraintStart_toStartOf="@id/artworks_heading"
+        app:layout_constraintTop_toBottomOf="@id/artworks_floor"
+        tools:text="13 artworks" />
+
+    <TextView
+        android:id="@+id/last_update"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@id/artworks_heading"
+        app:layout_constraintStart_toStartOf="@id/artworks_heading"
+        app:layout_constraintTop_toBottomOf="@id/artworks_count"
+        tools:text="Last update: 2022-04-15T16:40:14-05:00" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/artwork_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/artworks_split_guideline"
+        app:layout_constraintTop_toBottomOf="@id/top_banner" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
