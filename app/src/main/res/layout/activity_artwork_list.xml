@@ -42,14 +42,38 @@
         app:layout_constraintTop_toBottomOf="@id/top_banner" />
 
     <TextView
-        android:id="@+id/artworks_summary"
+        android:id="@+id/artworks_gallery_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artworks_heading"
+        tools:text="Gallery 240" />
+
+    <TextView
+        android:id="@+id/artworks_floor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/artworks_heading"
-        app:layout_constraintTop_toBottomOf="@id/artworks_heading"
-        tools:text="Gallery 240 • Floor 2 • 13 artworks" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artworks_gallery_title"
+        tools:text="Floor 2" />
+
+    <TextView
+        android:id="@+id/artworks_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artworks_floor"
+        tools:text="13 artworks" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/artwork_recycler"
@@ -63,7 +87,7 @@
         app:layout_constraintBottom_toTopOf="@id/last_update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/artworks_summary" />
+        app:layout_constraintTop_toBottomOf="@id/artworks_count" />
 
     <TextView
         android:id="@+id/last_update"

@@ -54,8 +54,9 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
         BottomNavigation.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
 
-        if (getIntent().hasExtra("gallery")) {
-            gallery = (Gallery) getIntent().getSerializableExtra("gallery");
+        if (getIntent().hasExtra(getString(R.string.gallery_extra))) {
+            gallery = (Gallery) getIntent()
+                    .getSerializableExtra(getString(R.string.gallery_extra));
         }
 
         if (gallery != null) ArtworkDownloader.getSourceData(this, gallery.getId());
@@ -71,18 +72,18 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
         binding.artworkRecycler.setLayoutManager(linearLayoutManager);
     }
 
-    // Call again after the artworks are loaded so the count is up to date
+    // Only the fields already on the Gallery; the count is set in updateData once artworks arrive
     private void showGalleryInfo() {
         if (gallery == null) {
             return;
         }
 
+        binding.artworksGalleryTitle.setText(gallery.getTitle());
+
         if (gallery.getFloor().isEmpty()) {
-            binding.artworksSummary.setText(getString(R.string.artwork_list_summary_no_floor,
-                    gallery.getTitle(), artworks.size()));
+            binding.artworksFloor.setVisibility(View.GONE);
         } else {
-            binding.artworksSummary.setText(getString(R.string.artwork_list_summary,
-                    gallery.getTitle(), gallery.getFloor(), artworks.size()));
+            binding.artworksFloor.setText(getString(R.string.floor_label, gallery.getFloor()));
         }
 
         binding.lastUpdate.setText(getString(R.string.last_update, gallery.getSource_updated_at()));
@@ -99,6 +100,9 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
         int sizeBeforeAdd = artworks.size();
         artworks.addAll(artList);
         adapter.notifyItemRangeInserted(sizeBeforeAdd, artList.size());
+
+        // Runs once per page, so the count grows as pages load
+        binding.artworksCount.setText(getString(R.string.artwork_count, artworks.size()));
     }
 
     public void updateGalleryThumbnail(int position) {
