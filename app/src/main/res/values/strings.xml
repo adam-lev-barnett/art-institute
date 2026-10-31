@@ -24,4 +24,10 @@
     <string name="page_limit">100</string>
     <string name="download_failed">Could not load galleries</string>
     <string name="gallery_extra">gallery</string>
+    <string name="detail_gallery_label">Gallery:</string>
+    <string name="detail_medium_label">Medium</string>
+    <string name="detail_dimensions_label">Dimensions</string>
+    <string name="detail_location_label">Location</string>
+    <string name="artwork_image">Artwork image</string>
+    <string name="favorite_toggle">Toggle favorite</string>
 </resources>

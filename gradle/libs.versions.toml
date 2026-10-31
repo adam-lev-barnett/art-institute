@@ -12,6 +12,7 @@ gson = "2.15.0"
 recyclerview = "1.4.0"
 volley = "1.2.1"
 glide = "5.0.9"
+photoview = "2.3.0"
 
 
 [libraries]
@@ -27,6 +28,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

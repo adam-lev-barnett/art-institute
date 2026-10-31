@@ -5,6 +5,208 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/activity_bg"
     tools:context=".ArtworkDetailActivity">
+
+    <include
+        android:id="@+id/top_banner"
+        layout="@layout/top_banner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Everything from the image down through the description scrolls -->
+    <ScrollView
+        android:id="@+id/detail_scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_banner">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detail_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+            <!-- PhotoView supports pinch-zoom and double-tap zoom on its own; load into it with Glide like an ImageView -->
+            <com.github.chrisbanes.photoview.PhotoView
+                android:id="@+id/detail_image"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:contentDescription="@string/artwork_image"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/artwork_default" />
+
+            <TextView
+                android:id="@+id/detail_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="serif"
+                android:textColor="@color/maroon"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/detail_favorite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_image"
+                tools:text="Moulin de la Galette" />
+
+            <ImageView
+                android:id="@+id/detail_favorite"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/favorite_toggle"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/detail_title"
+                app:srcCompat="@drawable/fav_off" />
+
+            <TextView
+                android:id="@+id/detail_artist_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/detail_title"
+                app:layout_constraintTop_toBottomOf="@id/detail_title"
+                tools:text="Henri de Toulouse-Lautrec, 1889" />
+
+            <!-- Values start at this guideline so every row lines up no matter which labels are hidden -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/detail_value_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.35" />
+
+            <!-- Each value stacks under the previous value; its label is pinned to the value's top,
+                 so hiding a label + value pair moves the next row up -->
+            <TextView
+                android:id="@+id/detail_gallery_label"
+                android:text="@string/detail_gallery_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/detail_gallery"
+                />
+
+            <TextView
+                android:id="@+id/detail_gallery"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/detail_value_guideline"
+                app:layout_constraintTop_toBottomOf="@id/detail_artist_date"
+                tools:text="Gallery 242" />
+
+            <TextView
+                android:id="@+id/detail_medium_label"
+                android:text="@string/detail_medium_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/detail_medium"
+                />
+
+            <TextView
+                android:id="@+id/detail_medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/detail_value_guideline"
+                app:layout_constraintTop_toBottomOf="@id/detail_gallery"
+                tools:text="Oil on canvas" />
+
+            <TextView
+                android:id="@+id/detail_dimensions_label"
+                android:text="@string/detail_dimensions_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/detail_dimensions"
+                />
+
+            <TextView
+                android:id="@+id/detail_dimensions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/detail_value_guideline"
+                app:layout_constraintTop_toBottomOf="@id/detail_medium"
+                tools:text="88.5 × 101.3 cm (34 7/8 × 39 5/8 in.)" />
+
+            <TextView
+                android:id="@+id/detail_location_label"
+                android:text="@string/detail_location_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/detail_location"
+                />
+
+            <TextView
+                android:id="@+id/detail_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/detail_value_guideline"
+                app:layout_constraintTop_toBottomOf="@id/detail_dimensions"
+                tools:text="France" />
+
+            <TextView
+                android:id="@+id/detail_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_location"
+                tools:text="With this painting of the dance hall known as the Moulin de la Galette, Henri de Toulouse-Lautrec established his reputation as the chronicler of the Montmartre district's famed nightlife." />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
