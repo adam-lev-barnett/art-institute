@@ -1,7 +1,9 @@
 package edu.adam.artinstituteofchicago;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -104,7 +106,15 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         int pos = binding.artworkRecycler.getChildLayoutPosition(v);
         Artwork artwork = artworks.get(pos);
-        //TODO Open ArtworkDetailActivity with this artwork (next step)
+        if (artwork != null) {
+            Intent intent = new Intent(this, ArtworkDetailActivity.class);
+            intent.putExtra(getString(R.string.artwork), artwork);
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, R.string.artwork_does_not_exist, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void updateData(List<Artwork> artList) {

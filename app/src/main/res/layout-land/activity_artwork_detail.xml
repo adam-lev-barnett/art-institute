@@ -35,7 +35,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.45" />
 
-    <!-- PhotoView supports pinch-zoom and double-tap zoom on its own; load into it with Glide like an ImageView -->
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/detail_image"
         android:layout_width="0dp"

@@ -31,4 +31,6 @@
     <string name="detail_location_label">Location</string>
     <string name="artwork_image">Artwork image</string>
     <string name="favorite_toggle">Toggle favorite</string>
+    <string name="artwork_does_not_exist">Artwork does not exist</string>
+    <string name="artwork">artwork</string>
 </resources>
