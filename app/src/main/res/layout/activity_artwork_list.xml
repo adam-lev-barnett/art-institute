@@ -100,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="•"
+        android:text="@string/info_separator"
         app:layout_constraintStart_toEndOf="@+id/artworks_gallery_title"
         app:layout_constraintTop_toTopOf="@id/artworks_gallery_title" />
 
@@ -109,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="•"
+        android:text="@string/info_separator"
         app:layout_constraintStart_toEndOf="@id/artworks_floor"
         app:layout_constraintTop_toTopOf="@id/artworks_gallery_title" />
 

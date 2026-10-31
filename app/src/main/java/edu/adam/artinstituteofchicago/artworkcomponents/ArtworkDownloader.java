@@ -1,12 +1,15 @@
 package edu.adam.artinstituteofchicago.artworkcomponents;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -21,8 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.adam.artinstituteofchicago.ArtworkDetailActivity;
 import edu.adam.artinstituteofchicago.ArtworkListActivity;
 import edu.adam.artinstituteofchicago.R;
+import edu.adam.artinstituteofchicago.SearchActivity;
 
 public class ArtworkDownloader {
     private static ArtworkListActivity artworkListActivity;
@@ -32,7 +37,9 @@ public class ArtworkDownloader {
             "id,title,artist_display," +
             "date_display,medium_display," +
             "place_of_origin,image_id,dimensions," +
-            "short_description,description,credit_line,galleryId";
+            "short_description,description,credit_line,galleryId," +
+            // Not in the spec's field list, but galleryId returns nothing; this is the gallery's name
+            "gallery_title";
     private static final int FIRST_PAGE = 1;
     private static RequestQueue rq;
     private static Response.Listener<JSONObject> listener;
@@ -64,24 +71,125 @@ public class ArtworkDownloader {
 
         listener = response -> handleResults(artworkListActivity, response);
 
-        errorListener = err -> {
-            String message = err.getMessage();
-            if (err.networkResponse != null && err.networkResponse.data != null) {
-                try {
-                    // Build error json object
-                    JSONObject errorJson = new JSONObject(new String(err.networkResponse.data));
-                    message = errorJson.getString("message");
-                } catch (JSONException ignored) {
-                    // Volley/activity toast handles this, so ignored
-                }
-            }
-            handleError(artworkListActivity, message);
-        };
+        errorListener = err -> handleError(artworkListActivity,
+                errorTitle(err), errorMessage(artworkListActivity, err));
 
         String queryUrl = buildUrl(currentGalleryId,
                 artworkListActivity.getString(R.string.page_limit), FIRST_PAGE);
 
         requestGET(queryUrl, listener, errorListener);
+    }
+
+    /** Keyword search on titles and artists; only the first page (100 results), since a common
+     *  keyword can match thousands of artworks and every page is another request against the rate limit.
+     *  The API's "q" parameter matches every artwork for any keyword, so a multi_match query is used
+     *  instead; it returns 0 results for nonsense terms, which the "No Results" dialog needs */
+    public static void searchArtworks(SearchActivity activity, String keyword) {
+        if (rq == null) rq = Volley.newRequestQueue(activity);
+
+        String queryUrl = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter("query[multi_match][query]", keyword)
+                .appendQueryParameter("query[multi_match][fields][0]", "title")
+                .appendQueryParameter("query[multi_match][fields][1]", "artist_display")
+                .appendQueryParameter("fields", FIELDS)
+                .appendQueryParameter("limit", activity.getString(R.string.page_limit))
+                .appendQueryParameter("page", String.valueOf(FIRST_PAGE))
+                .build()
+                .toString();
+
+        // Local listeners remember which keyword they belong to, so a slow older search can be ignored
+        Response.Listener<JSONObject> searchListener = response -> {
+            try {
+                activity.updateData(keyword, parseJsonArray(response));
+            } catch (JSONException e) {
+                activity.downloadFailed(null, null);
+            }
+        };
+
+        Response.ErrorListener searchErrorListener = err ->
+                activity.downloadFailed(errorTitle(err), errorMessage(activity, err));
+
+        requestGET(queryUrl, searchListener, searchErrorListener);
+    }
+
+    /** One random public-domain artwork with an image, using the API's random_score query (POST).
+     *  The seed is the current time, so every request gets a different artwork */
+    public static void getRandomArtwork(ArtworkDetailActivity activity) {
+        if (rq == null) rq = Volley.newRequestQueue(activity);
+
+        JSONObject body;
+        try {
+            body = buildRandomQuery();
+        } catch (JSONException e) {
+            activity.downloadFailed(null, null);
+            return;
+        }
+
+        Response.Listener<JSONObject> randomListener = response -> {
+            try {
+                List<Artwork> results = parseJsonArray(response);
+                if (results.isEmpty()) {
+                    activity.downloadFailed(null, null);
+                } else {
+                    activity.showRandomArtwork(results.get(0));
+                }
+            } catch (JSONException e) {
+                activity.downloadFailed(null, null);
+            }
+        };
+
+        Response.ErrorListener randomErrorListener = err ->
+                activity.downloadFailed(errorTitle(err), errorMessage(activity, err));
+
+        sendRequest(Request.Method.POST, BASE_URL, body, randomListener, randomErrorListener);
+    }
+
+    /** The API's random artwork query, built with org.json. Same fields as the other requests,
+     *  so the detail screen gets everything it shows */
+    private static JSONObject buildRandomQuery() throws JSONException {
+        JSONArray filters = new JSONArray()
+                .put(new JSONObject().put("term", new JSONObject().put("is_public_domain", true)))
+                .put(fieldExists("image_id"))
+                .put(fieldExists("thumbnail.width"))
+                .put(fieldExists("thumbnail.height"));
+
+        JSONObject functionScore = new JSONObject()
+                .put("query", new JSONObject().put("bool", new JSONObject().put("filter", filters)))
+                .put("boost_mode", "replace")
+                .put("random_score", new JSONObject()
+                        .put("field", "id")
+                        .put("seed", System.currentTimeMillis()));
+
+        return new JSONObject()
+                .put("fields", FIELDS)
+                .put("boost", false)
+                .put("limit", 1)
+                .put("query", new JSONObject().put("function_score", functionScore));
+    }
+
+    private static JSONObject fieldExists(String field) throws JSONException {
+        return new JSONObject().put("exists", new JSONObject().put("field", field));
+    }
+
+    /** Volley's error class names the problem (NoConnectionError, TimeoutError...), like the spec's example */
+    private static String errorTitle(VolleyError err) {
+        return err.getClass().getSimpleName();
+    }
+
+    private static String errorMessage(Context context, VolleyError err) {
+        if (err instanceof NoConnectionError) return context.getString(R.string.no_connection);
+
+        String message = err.getMessage();
+        if (err.networkResponse != null && err.networkResponse.data != null) {
+            try {
+                // Build error json object
+                JSONObject errorJson = new JSONObject(new String(err.networkResponse.data));
+                message = errorJson.getString("message");
+            } catch (JSONException ignored) {
+                // Keeps Volley's message; the dialog still shows
+            }
+        }
+        return message;
     }
 
     /** Builds the IIIF image URL with required headers.
@@ -99,8 +207,15 @@ public class ArtworkDownloader {
     private static void requestGET(String query,
                                    Response.Listener<JSONObject> onResponse,
                                    Response.ErrorListener onError) {
+        sendRequest(Request.Method.GET, query, null, onResponse, onError);
+    }
+
+    /** body is null for GET; for POST, JsonObjectRequest sends it as JSON */
+    private static void sendRequest(int method, String url, JSONObject body,
+                                    Response.Listener<JSONObject> onResponse,
+                                    Response.ErrorListener onError) {
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, query, null, onResponse, onError) {
+                new JsonObjectRequest(method, url, body, onResponse, onError) {
 
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -161,7 +276,8 @@ public class ArtworkDownloader {
                 getStringOrEmpty(json, "dimensions"),
                 getStringOrEmpty(json, "short_description"),
                 getStringOrEmpty(json, "description"),
-                getStringOrEmpty(json, "credit_line"));
+                getStringOrEmpty(json, "credit_line"),
+                getStringOrEmpty(json, "gallery_title"));
     }
 
     /** isNull is true for a missing key AND for "key": null, so "null" never ends up on screen */
@@ -175,12 +291,12 @@ public class ArtworkDownloader {
             activity.updateData(works);
             loadNextPageIfPresent(response);
         } catch (JSONException e) {
-            handleError(activity, null);
+            handleError(activity, null, null);
         }
     }
 
-    /** Passes error toast handling to activity */
-    private static void handleError(ArtworkListActivity activity, String errorMsg) {
-        activity.downloadFailed(errorMsg);
+    /** Passes error dialog handling to activity; null title/message use the activity's defaults */
+    private static void handleError(ArtworkListActivity activity, String title, String errorMsg) {
+        activity.downloadFailed(title, errorMsg);
     }
 }

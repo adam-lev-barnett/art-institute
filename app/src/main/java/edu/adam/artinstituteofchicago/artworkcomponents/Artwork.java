@@ -17,22 +17,24 @@ public class Artwork implements Serializable {
     private final String shortDescription;
     private final String description;
     private final String creditLine;
+    private final String galleryTitle;
 
     public Artwork(long id, String title, String artistDisplay, String dateDisplay,
                    String mediumDisplay, String placeOfOrigin, String imageId,
                    String dimensions, String shortDescription, String description,
-                   String creditLine) {
+                   String creditLine, String galleryTitle) {
         this.id = id;
+        this.imageId = imageId;
         this.title = title;
         this.artistDisplay = artistDisplay;
         this.dateDisplay = dateDisplay;
         this.mediumDisplay = mediumDisplay;
         this.placeOfOrigin = placeOfOrigin;
-        this.imageId = imageId;
         this.dimensions = dimensions;
         this.shortDescription = shortDescription;
         this.description = description;
         this.creditLine = creditLine;
+        this.galleryTitle = galleryTitle;
     }
 
     public long getId() {
@@ -77,5 +79,9 @@ public class Artwork implements Serializable {
 
     public String getCreditLine() {
         return creditLine;
+    }
+
+    public String getGalleryTitle() {
+        return galleryTitle;
     }
 }

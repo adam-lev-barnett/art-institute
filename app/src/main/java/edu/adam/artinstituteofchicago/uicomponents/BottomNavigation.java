@@ -46,11 +46,7 @@ public class BottomNavigation {
                     activity.startActivity(new Intent(activity, FavoritesActivity.class)));
         }
 
-        if (activity instanceof ArtworkDetailActivity) {
-            nav.randomIcon.setColorFilter(activity.getColor(R.color.maroon));
-        } else {
-            nav.randomIcon.setOnClickListener(v ->
+        nav.randomIcon.setOnClickListener(v ->
                     activity.startActivity(new Intent(activity, ArtworkDetailActivity.class)));
-        }
     }
 }

@@ -29,7 +29,7 @@
 
     <!-- Everything from the image down through the description scrolls -->
     <ScrollView
-        android:id="@+id/detail_scroll"
+        android:id="@+id/artwork_detail_scroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -78,6 +78,7 @@
                 android:layout_height="32dp"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/favorite_toggle"
+                android:onClick="handleHeartClick"
                 android:scaleType="fitCenter"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/detail_title"

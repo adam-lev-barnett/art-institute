@@ -3,7 +3,6 @@ package edu.adam.artinstituteofchicago;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -22,6 +21,7 @@ import edu.adam.artinstituteofchicago.gallerycomponents.Gallery;
 import edu.adam.artinstituteofchicago.gallerycomponents.GalleryAdapter;
 import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader;
 import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
+import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog;
 
 /*
     RecyclerView from API call has GALLERY objects, not artwork
@@ -37,7 +37,6 @@ import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
     -- Galleries icon should be red because currently on it
 
 */
-//TODO format lastUpdate
 public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
     public ActivityGalleryBinding galleryBinding;
     private LinearLayoutManager linearLayoutManager;
@@ -80,12 +79,11 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         startActivity(intent);
     }
 
-    public void downloadFailed(String errMessage) {
-        String message = (
-                errMessage == null ?
-                        getString(R.string.download_failed) :
-                        errMessage);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    /** Null title or message means the downloader had no details, so use the defaults */
+    public void downloadFailed(String title, String errMessage) {
+        ErrorDialog.show(this,
+                title == null ? getString(R.string.download_error) : title,
+                errMessage == null ? getString(R.string.download_failed) : errMessage);
     }
 
     public void updateData(List<Gallery> galleryList) {

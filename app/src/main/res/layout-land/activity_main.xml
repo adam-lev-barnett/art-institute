@@ -35,7 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="8dp"
-        android:text="Explore Art"
+        android:text="@string/explore_art"
+        android:textColor="@color/maroon"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
         android:textStyle="bold"
         android:typeface="serif"
@@ -46,7 +47,7 @@
         android:id="@+id/home_subhead"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Discover thousands of artworks from around the world"
+        android:text="@string/discover_artworks"
         app:layout_constraintEnd_toEndOf="@+id/heading_explore_art"
         app:layout_constraintStart_toStartOf="@+id/heading_explore_art"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -54,6 +55,7 @@
     <!-- 1. Browse Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/browse_card_main_activity"
+        android:onClick="openGalleries"
         style="@style/main_activity_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -124,6 +126,7 @@
     <!-- 2. Search Card (Chain Middle) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/gallery_card_layout"
+        android:onClick="openSearch"
         style="@style/main_activity_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -195,6 +198,7 @@
     <!-- Random Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/random_card_main_activity"
+        android:onClick="openRandom"
         style="@style/main_activity_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -220,7 +224,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/random_grey" />
+                app:srcCompat="@drawable/random" />
 
             <TextView
                 android:id="@+id/random_card_heading"
@@ -229,7 +233,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="serif"
-                android:text="Random Artwork"
+                android:text="@string/random_artwork"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/random_card_arrow"
@@ -242,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
-                android:text="@string/find_art_by_keyword"
+                android:text="@string/let_us_surprise_you"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/random_card_arrow"
                 app:layout_constraintStart_toStartOf="@+id/random_card_heading"

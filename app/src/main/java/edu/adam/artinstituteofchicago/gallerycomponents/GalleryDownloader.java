@@ -2,9 +2,9 @@ package edu.adam.artinstituteofchicago.gallerycomponents;
 
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -68,22 +68,26 @@ public class GalleryDownloader {
             try {
                 handleResults(galleryActivity, response.toString());
             } catch (JSONException e) {
-                Toast.makeText(galleryActivity, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                handleError(galleryActivity, null, null);
             }
         };
 
         errorListener = err -> {
+            // Volley's error class names the problem (NoConnectionError, TimeoutError...), like the spec's example
+            String title = err.getClass().getSimpleName();
             String message = err.getMessage();
-            if (err.networkResponse != null && err.networkResponse.data != null) {
+            if (err instanceof NoConnectionError) {
+                message = galleryActivity.getString(R.string.no_connection);
+            } else if (err.networkResponse != null && err.networkResponse.data != null) {
                 try {
                     // Build error json object
                     JSONObject errorJson = new JSONObject(new String(err.networkResponse.data));
                     message = errorJson.getString("message");
                 } catch (JSONException ignored) {
-                    // The volley error handler already sends out the toast
+                    // Keeps Volley's message; the dialog still shows
                 }
             }
-            handleError(galleryActivity, message);
+            handleError(galleryActivity, title, message);
         };
 
         String queryUrl = buildUrl();
@@ -163,7 +167,7 @@ public class GalleryDownloader {
             return galleries;
 
         } catch (JSONException e) {
-            Toast.makeText(galleryActivity, "Error: " + "could not retrieve galleries", Toast.LENGTH_LONG).show();
+            handleError(galleryActivity, null, null);
         }
 
         return null;
@@ -176,7 +180,7 @@ public class GalleryDownloader {
             if (pagination.has("next_url")) requestGET(pagination.getString("next_url"), listener, errorListener);
 
         } catch (JSONException e) {
-            handleError(galleryActivity, "Error interpreting pagination");
+            handleError(galleryActivity, null, null);
         }
     }
 
@@ -200,7 +204,7 @@ public class GalleryDownloader {
     /** Only parses the data if it exists */
     private static void handleResults(GalleryActivity activity, String json) throws JSONException {
         if (json == null) {
-            handleError(activity, null);
+            handleError(activity, null, null);
             return;
         }
 
@@ -213,9 +217,9 @@ public class GalleryDownloader {
         loadNextPageIfPresent(json);
     }
 
-    /** Passes error toast handling to activity */
-    private static void handleError(GalleryActivity activity, String errorMsg) {
-        activity.runOnUiThread(() -> activity.downloadFailed(errorMsg));
+    /** Passes error dialog handling to activity; null title/message use the activity's defaults */
+    private static void handleError(GalleryActivity activity, String title, String errorMsg) {
+        activity.runOnUiThread(() -> activity.downloadFailed(title, errorMsg));
     }
 
 }

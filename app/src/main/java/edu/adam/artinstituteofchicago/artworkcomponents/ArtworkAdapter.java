@@ -12,17 +12,22 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.adam.artinstituteofchicago.ArtworkListActivity;
 import edu.adam.artinstituteofchicago.R;
 import edu.adam.artinstituteofchicago.databinding.ArtworkListRowBinding;
 
 public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkViewHolder> {
     private final List<Artwork> artworks;
-    private final ArtworkListActivity artworkListAct;
+    // Listeners instead of a specific activity, so any artwork list screen can reuse this adapter
+    private final View.OnClickListener clickListener;
+    private final View.OnLongClickListener longClickListener;
 
-    public ArtworkAdapter(List<Artwork> artworks, ArtworkListActivity artworkListActivity) {
+    /** Pass null for longClickListener if the screen has no long-press action */
+    public ArtworkAdapter(List<Artwork> artworks,
+                          View.OnClickListener clickListener,
+                          View.OnLongClickListener longClickListener) {
         this.artworks = artworks == null ? new ArrayList<>() : artworks;
-        this.artworkListAct = artworkListActivity;
+        this.clickListener = clickListener;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -32,7 +37,8 @@ public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkViewHolder> {
                 ArtworkListRowBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false
                 );
-        rowBinding.getRoot().setOnClickListener(artworkListAct);
+        rowBinding.getRoot().setOnClickListener(clickListener);
+        if (longClickListener != null) rowBinding.getRoot().setOnLongClickListener(longClickListener);
 
         return new ArtworkViewHolder(rowBinding);
     }
@@ -59,10 +65,11 @@ public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkViewHolder> {
 
         if (artwork.getImageId().isEmpty()) {
             // Cancel any load still running from this row's previous artwork
-            Glide.with(artworkListAct).clear(holder.binding.artworkThumbnail);
+            Glide.with(holder.itemView).clear(holder.binding.artworkThumbnail);
             holder.binding.artworkThumbnail.setImageResource(R.drawable.artwork_default);
         } else {
-            Glide.with(artworkListAct)
+            // The row's view ties Glide to whichever activity is showing it
+            Glide.with(holder.itemView)
                     .load(ArtworkDownloader.getImageUrl(artwork.getImageId(), ArtworkDownloader.THUMBNAIL_SIZE))
                     .into(holder.binding.artworkThumbnail);
         }

@@ -19,7 +19,10 @@
     <string name="floor_label">Floor %1$s</string>
     <string name="artworks">Artworks</string>
     <string name="artwork_thumbnail">Artwork thumbnail</string>
-    <string name="artwork_count">%1$d artworks</string>
+    <plurals name="artwork_count">
+        <item quantity="one">%1$d artwork</item>
+        <item quantity="other">%1$d artworks</item>
+    </plurals>
     <string name="info_separator">•</string>
     <string name="last_update">Last update: %1$s</string>
     <string name="page_limit">100</string>
@@ -33,4 +36,33 @@
     <string name="favorite_toggle">Toggle favorite</string>
     <string name="artwork_does_not_exist">Artwork does not exist</string>
     <string name="artwork">artwork</string>
+    <string name="artist_date">%1$s, %2$s</string>
+    <string name="fave_file">fave_file</string>
+    <string name="favorites">Favorites</string>
+    <string name="no_favorites">You haven\'t added any favorite artworks, yet!</string>
+    <string name="remove_favorite_title">Remove Favorite</string>
+    <string name="remove_favorite_message">Are you sure you want to remove \'%1$s\' from your favorites?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">Ok</string>
+    <string name="download_error">DownloadError</string>
+    <string name="no_connection">No network connection present - cannot contact the Art Institute API server</string>
+    <string name="artworks_download_failed">Could not load artworks</string>
+    <string name="artwork_error">ArtworkError</string>
+    <string name="favorites_error">FavoritesError</string>
+    <string name="favorites_load_failed">Favorites could not be loaded</string>
+    <string name="favorites_save_failed">Favorites could not be saved</string>
+    <string name="random_download_failed">Could not load a random artwork</string>
+    <string name="search_artwork">Search Artwork</string>
+    <string name="search_hint">Enter keyword(s)</string>
+    <string name="search_button">Search</string>
+    <string name="search_required">Enter a keyword to search</string>
+    <string name="search_extra">search</string>
+    <string name="search_download_failed">Could not search artworks</string>
+    <string name="no_results_title">No Results</string>
+    <string name="explore_art">Explore Art</string>
+    <string name="discover_artworks">Discover thousands of artworks from around the world</string>
+    <string name="random_artwork">Random Artwork</string>
+    <string name="let_us_surprise_you">Let us surprise you</string>
+    <string name="no_results_message">No results found using search term \'%1$s\'</string>
 </resources>

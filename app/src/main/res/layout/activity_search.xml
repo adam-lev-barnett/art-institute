@@ -5,6 +5,83 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/activity_bg"
     tools:context=".SearchActivity">
+
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/top_banner"
+        layout="@layout/top_banner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/search_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="serif"
+        android:text="@string/search_artwork"
+        android:textColor="@color/maroon"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_banner" />
+
+    <EditText
+        android:id="@+id/search_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints=""
+        android:hint="@string/search_hint"
+        android:inputType="text"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@id/search_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_heading" />
+
+    <ImageView
+        android:id="@+id/search_button"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/search_button"
+        android:onClick="searchArtworks"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/search_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/search_input"
+        app:srcCompat="@drawable/ic_search" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
