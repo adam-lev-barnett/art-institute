@@ -33,12 +33,28 @@ public class GalleryDownloader {
     private static Response.Listener<JSONObject> listener;
     private static Response.ErrorListener errorListener;
 
+    /** Gallery thumbnails come from the first artwork in each gallery, so these hit the artworks endpoint */
+    private static final String ARTWORK_SEARCH_URL = "https://api.artic.edu/api/v1/artworks/search";
+    private static final String THUMBNAIL_FIELDS = "id,image_id";
+    private static final String THUMBNAIL_LIMIT = "1";
+
     private static String buildUrl() {
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("fields", FIELDS)
                 // How many items per page
                 .appendQueryParameter("limit", galleryActivity.getString(R.string.page_limit))
                 // start at page one
+                .appendQueryParameter("page", startingPage)
+                .build()
+                .toString();
+    }
+
+    private static String buildThumbnailUrl(long galleryId) {
+        return Uri.parse(ARTWORK_SEARCH_URL).buildUpon()
+                .appendQueryParameter("query[term][gallery_id]", String.valueOf(galleryId))
+                .appendQueryParameter("fields", THUMBNAIL_FIELDS)
+                // Only the first artwork is needed
+                .appendQueryParameter("limit", THUMBNAIL_LIMIT)
                 .appendQueryParameter("page", startingPage)
                 .build()
                 .toString();
@@ -72,14 +88,44 @@ public class GalleryDownloader {
 
         String queryUrl = buildUrl();
 
-
-
-        requestGET(queryUrl);
+        requestGET(queryUrl, listener, errorListener);
     }
 
-    private static void requestGET(String query) {
+    /** Looks up the first artwork in a gallery and saves its image id on the Gallery for the thumbnail */
+    public static void getGalleryThumbnail(Gallery gallery, int position) {
+        if (rq == null) rq = Volley.newRequestQueue(galleryActivity);
+
+        // Async, so each one has to remember which gallery and row it belongs to
+        Response.Listener<JSONObject> thumbnailListener = response -> {
+            try {
+                JSONArray data = response.getJSONArray("data");
+                // Empty gallery: leave the image id blank so the default image shows
+                if (data.length() == 0) return;
+
+                JSONObject firstArtwork = data.getJSONObject(0);
+                if (!firstArtwork.isNull("image_id")) {
+                    gallery.setImageId(firstArtwork.getString("image_id"));
+                    galleryActivity.updateGalleryThumbnail(position);
+                }
+            } catch (JSONException e) {
+                Log.d(TAG, "getGalleryThumbnail: " + e.getMessage());
+            }
+        };
+
+        // Failed thumbnail keeps the default image and retries the next time its row is bound
+        Response.ErrorListener thumbnailErrorListener = err -> {
+            gallery.setThumbnailFetched(false);
+            Log.d(TAG, "getGalleryThumbnail: " + gallery.getTitle() + " " + err.getMessage());
+        };
+
+        requestGET(buildThumbnailUrl(gallery.getId()), thumbnailListener, thumbnailErrorListener);
+    }
+
+    private static void requestGET(String query,
+                                   Response.Listener<JSONObject> onResponse,
+                                   Response.ErrorListener onError) {
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, query, null, listener, errorListener) {
+                new JsonObjectRequest(Request.Method.GET, query, null, onResponse, onError) {
 
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -127,7 +173,7 @@ public class GalleryDownloader {
         try {
             JSONObject response = new JSONObject(jsonString);
             JSONObject pagination = response.getJSONObject("pagination");
-            if (pagination.has("next_url")) requestGET(pagination.getString("next_url"));
+            if (pagination.has("next_url")) requestGET(pagination.getString("next_url"), listener, errorListener);
 
         } catch (JSONException e) {
             handleError(galleryActivity, "Error interpreting pagination");
@@ -171,6 +217,5 @@ public class GalleryDownloader {
     private static void handleError(GalleryActivity activity, String errorMsg) {
         activity.runOnUiThread(() -> activity.downloadFailed(errorMsg));
     }
-
 
 }

@@ -1,10 +1,12 @@
 package edu.adam.artinstituteofchicago;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -35,11 +37,13 @@ import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
     -- Galleries icon should be red because currently on it
 
 */
+//TODO format lastUpdate
 public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
     public ActivityGalleryBinding galleryBinding;
     private LinearLayoutManager linearLayoutManager;
     private GalleryAdapter adapter;
     private final List<Gallery> galleries = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +72,13 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-
+        Intent intent = new Intent(this, ArtworkListActivity.class);
+        if (galleries != null && !galleries.isEmpty()) {
+            Gallery gallery = galleries.get(galleryBinding.galleryRecycler.getChildLayoutPosition(v));
+            intent.putExtra(getString(R.string.gallery_extra), gallery);
+        }
+        startActivity(intent);
     }
-
 
     public void downloadFailed(String errMessage) {
         String message = (
@@ -84,5 +92,9 @@ public class GalleryActivity extends AppCompatActivity implements View.OnClickLi
         int sizeBeforeAdd = galleries.size();
         galleries.addAll(galleryList);
         adapter.notifyItemRangeInserted(sizeBeforeAdd, galleryList.size());
+    }
+
+    public void updateGalleryThumbnail(int position) {
+        adapter.notifyItemChanged(position);
     }
 }

@@ -15,8 +15,10 @@ import java.util.List;
 
 import edu.adam.artinstituteofchicago.artworkcomponents.Artwork;
 import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkAdapter;
+import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkDownloader;
 import edu.adam.artinstituteofchicago.databinding.ActivityArtworkListBinding;
 import edu.adam.artinstituteofchicago.gallerycomponents.Gallery;
+import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader;
 import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 
 /*
@@ -31,8 +33,6 @@ import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
     - all icons grey on this screen
 */
 public class ArtworkListActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String EXTRA_GALLERY = "GALLERY";
-
     public ActivityArtworkListBinding binding;
     private LinearLayoutManager linearLayoutManager;
     private ArtworkAdapter adapter;
@@ -54,9 +54,11 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
         BottomNavigation.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
 
-        if (getIntent().hasExtra(EXTRA_GALLERY)) {
-            gallery = (Gallery) getIntent().getSerializableExtra(EXTRA_GALLERY);
+        if (getIntent().hasExtra("gallery")) {
+            gallery = (Gallery) getIntent().getSerializableExtra("gallery");
         }
+
+        if (gallery != null) ArtworkDownloader.getSourceData(this, gallery.getId());
 
         setUpArtworkRecycler();
         showGalleryInfo();
@@ -91,5 +93,18 @@ public class ArtworkListActivity extends AppCompatActivity implements View.OnCli
         int pos = binding.artworkRecycler.getChildLayoutPosition(v);
         Artwork artwork = artworks.get(pos);
         //TODO Open ArtworkDetailActivity with this artwork (next step)
+    }
+
+    public void updateData(List<Artwork> artList) {
+        int sizeBeforeAdd = artworks.size();
+        artworks.addAll(artList);
+        adapter.notifyItemRangeInserted(sizeBeforeAdd, artList.size());
+    }
+
+    public void updateGalleryThumbnail(int position) {
+        adapter.notifyItemChanged(position);
+    }
+
+    public void downloadFailed(String errorMsg) {
     }
 }

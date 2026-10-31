@@ -24,4 +24,5 @@
     <string name="last_update">Last update: %1$s</string>
     <string name="page_limit">100</string>
     <string name="download_failed">Could not load galleries</string>
+    <string name="gallery_extra">gallery</string>
 </resources>

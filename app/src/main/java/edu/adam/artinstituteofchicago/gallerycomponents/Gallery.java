@@ -13,8 +13,11 @@ public class Gallery implements Serializable {
     private final boolean is_closed;
     private final String source_updated_at;
 
-    // Not part of the galleries response: the first artwork returned for this gallery
+    // first artwork returned for this gallery
     private String imageId = "";
+
+    // true once the thumbnail request has been sent, so rebinding the row doesn't send it again
+    private boolean thumbnailFetched = false;
 
     public Gallery(long id, String title, String number, String floor,
                    boolean is_closed, String lastUpdate) {
@@ -56,5 +59,13 @@ public class Gallery implements Serializable {
 
     public void setImageId(String imageId) {
         this.imageId = imageId;
+    }
+
+    public boolean isThumbnailFetched() {
+        return thumbnailFetched;
+    }
+
+    public void setThumbnailFetched(boolean thumbnailFetched) {
+        this.thumbnailFetched = thumbnailFetched;
     }
 }
