@@ -27,17 +27,6 @@ import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader;
 import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog;
 
-/*
-    Opened by tapping a gallery in GalleryActivity (Gallery passed in with putExtra)
-    - Heading shows the gallery, the floor, and the number of artworks
-    - RecyclerView of ARTWORK objects: title, artist, date (date is just a string)
-    - "Last update" below the list comes from the gallery's source_updated_at
-
-    Tapping an artwork opens ArtworkDetailActivity
-
-    Nav on bottom:
-    - all icons grey on this screen
-*/
 public class ArtworkListActivity extends AppCompatActivity implements View.OnClickListener {
     // Matches the spec's mockup: "Jan 20, 2022 12:15 AM"
     private static final String LAST_UPDATE_PATTERN = "MMM d, yyyy h:mm a";

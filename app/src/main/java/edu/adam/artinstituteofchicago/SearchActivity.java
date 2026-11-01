@@ -23,17 +23,6 @@ import edu.adam.artinstituteofchicago.databinding.ActivitySearchBinding;
 import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog;
 
-/*
-    Opened from the Search card on MainActivity or the search icon in the bottom nav
-    - Keyword(s) typed in the EditText; tapping the search icon runs the API search
-    - Results shown in a RecyclerView, same rows as ArtworkListActivity
-    - No results shows the "No Results" AlertDialog
-
-    Tapping an artwork opens ArtworkDetailActivity
-
-    Nav on bottom:
-    - search icon is maroon on this screen
-*/
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
     public ActivitySearchBinding binding;

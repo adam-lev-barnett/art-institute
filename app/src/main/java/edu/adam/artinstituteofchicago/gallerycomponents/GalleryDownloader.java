@@ -33,7 +33,6 @@ public class GalleryDownloader {
     private static Response.Listener<JSONObject> listener;
     private static Response.ErrorListener errorListener;
 
-    /** Gallery thumbnails come from the first artwork in each gallery, so these hit the artworks endpoint */
     private static final String ARTWORK_SEARCH_URL = "https://api.artic.edu/api/v1/artworks/search";
     private static final String THUMBNAIL_FIELDS = "id,image_id";
     private static final String THUMBNAIL_LIMIT = "1";
@@ -41,9 +40,7 @@ public class GalleryDownloader {
     private static String buildUrl() {
         return Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("fields", FIELDS)
-                // How many items per page
                 .appendQueryParameter("limit", galleryActivity.getString(R.string.page_limit))
-                // start at page one
                 .appendQueryParameter("page", startingPage)
                 .build()
                 .toString();
@@ -73,7 +70,7 @@ public class GalleryDownloader {
         };
 
         errorListener = err -> {
-            // Volley's error class names the problem (NoConnectionError, TimeoutError...), like the spec's example
+            // Volley's error class names the AlertDialog
             String title = err.getClass().getSimpleName();
             String message = err.getMessage();
             if (err instanceof NoConnectionError) {

@@ -15,11 +15,11 @@
 
         <ImageView
             android:id="@+id/toolbar_logo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/banner_logo_size"
+            android:layout_height="@dimen/banner_logo_size"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="@dimen/banner_logo_margin"
+            android:layout_marginBottom="@dimen/banner_logo_margin"
             android:adjustViewBounds="true"
             android:contentDescription="@string/aic_logo"
             android:scaleType="fitCenter"

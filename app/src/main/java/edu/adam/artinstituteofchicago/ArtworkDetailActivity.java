@@ -45,7 +45,7 @@ public class ArtworkDetailActivity extends AppCompatActivity {
         intent = getIntent();
 
         if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.artwork))) {
-            // Rotation: keep the same artwork, otherwise random mode would fetch a new one
+            // keep the same artwork, otherwise random mode would fetch a new one
             artwork = savedInstanceState.getSerializable(getString(R.string.artwork), Artwork.class);
             loadInfo();
         } else if (intent != null && intent.hasExtra(getString(R.string.artwork))) {
@@ -91,7 +91,6 @@ public class ArtworkDetailActivity extends AppCompatActivity {
         binding.detailTitle.setText(artwork.getTitle());
         showArtistAndDate();
 
-        // Layout starts on fav_off, so only change it if it's already a favorite
         if (UserFavorites.isFavorite(artwork)) {
             binding.detailFavorite.setImageResource(R.drawable.fav_on);
         }
@@ -124,7 +123,6 @@ public class ArtworkDetailActivity extends AppCompatActivity {
                 .into(binding.detailImage);
     }
     private void showArtistAndDate() {
-        // artist_display can have extra lines (nationality, lifespan); the first line is the name
         String artist = artwork.getArtistDisplay().split("\n")[0];
         String date = artwork.getDateDisplay();
 
@@ -139,8 +137,6 @@ public class ArtworkDetailActivity extends AppCompatActivity {
         }
     }
 
-
-    /** Missing data hides the value and its label together */
     private void showOrHide(TextView label, TextView value, String text) {
         if (text.isEmpty()) {
             label.setVisibility(View.GONE);
@@ -165,9 +161,7 @@ public class ArtworkDetailActivity extends AppCompatActivity {
         }
     }
 
-    /** Set with android:onClick on detail_favorite in both layouts */
     public void handleHeartClick(View v) {
-        // No artwork loaded, so there's nothing to favorite
         if (artwork == null) return;
 
         if (UserFavorites.isFavorite(artwork)) removeFavorite();

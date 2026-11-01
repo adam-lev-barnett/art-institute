@@ -26,15 +26,6 @@ import edu.adam.artinstituteofchicago.databinding.ActivityFavoritesBinding;
 import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog;
 
-/*
-    Opened from the favorites icon in the bottom nav
-    - RecyclerView of the user's favorite artworks, sorted by title
-    - Tapping an artwork opens ArtworkDetailActivity
-    - Long-pressing an artwork asks to confirm, then removes it from favorites
-
-    Nav on bottom:
-    - favorites icon is maroon on this screen
-*/
 public class FavoritesActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnLongClickListener {
 
@@ -63,13 +54,10 @@ public class FavoritesActivity extends AppCompatActivity
         setUpFavesRecycler();
     }
 
-    /** Reloads in onResume instead of onCreate, so un-favoriting on the detail screen
-     *  and pressing back removes the artwork here too */
     @Override
     protected void onResume() {
         super.onResume();
 
-        // If Android killed the app and reopened it on this screen, MainActivity never loaded the faves
         if (!UserFavorites.loadAttempted()) {
             try {
                 UserFavorites.loadFaves(this);
@@ -82,7 +70,6 @@ public class FavoritesActivity extends AppCompatActivity
 
         faves.clear();
         faves.addAll(UserFavorites.getFaves());
-        // Whole list was replaced, so a specific notify doesn't apply
         adapter.notifyDataSetChanged();
         showEmptyMessageIfNoFaves();
     }
@@ -101,7 +88,6 @@ public class FavoritesActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         int pos = binding.favesRecycler.getChildLayoutPosition(v);
-        // Row can be mid-animation after a removal
         if (pos == RecyclerView.NO_POSITION) return;
 
         Intent intent = new Intent(this, ArtworkDetailActivity.class);
@@ -124,12 +110,10 @@ public class FavoritesActivity extends AppCompatActivity
                 .setNegativeButton(R.string.no, null)
                 .show();
 
-        // true = long press handled, so a regular click doesn't also fire
         return true;
     }
 
     private void removeFave(Artwork artwork) {
-        // Look the position up again; pos from the long press could be stale by the time Yes is tapped
         int pos = faves.indexOf(artwork);
         if (pos == -1) return;
 

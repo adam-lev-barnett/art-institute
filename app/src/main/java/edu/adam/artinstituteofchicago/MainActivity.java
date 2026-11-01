@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* Card clicks - opens from bottom nav and mainActivity */
     public void openGalleries(View v) {
         startActivity(new Intent(this, GalleryActivity.class));
     }

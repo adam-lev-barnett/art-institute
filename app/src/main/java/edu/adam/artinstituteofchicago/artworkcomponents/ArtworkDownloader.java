@@ -80,11 +80,6 @@ public class ArtworkDownloader {
         requestGET(queryUrl, listener, errorListener);
     }
 
-    /** Keyword search on titles and artists; only the first page (100 results), since a common
-     *  keyword can match thousands of artworks and every page is another request against the rate limit.
-     *  The API's "q" parameter matches every artwork for any keyword, so a multi_match query is used
-     *  instead; it returns 0 results for nonsense terms, which the "No Results" dialog needs */
-
     public static void search(SearchActivity activity, String keywords) {
         if (rq == null) rq = Volley.newRequestQueue(activity);
         if (keywords == null || keywords.isEmpty()) return;
@@ -103,7 +98,7 @@ public class ArtworkDownloader {
                 .buildUpon()
                 .appendQueryParameter("q", query)
                 .appendQueryParameter("fields", FIELDS)
-                .appendQueryParameter("limit", "100")
+                .appendQueryParameter("limit", activity.getString(R.string._100))
                 .appendQueryParameter("page", String.valueOf(FIRST_PAGE))
                 .build()
                 .toString();
@@ -304,8 +299,7 @@ public class ArtworkDownloader {
         }
     }
 
-    /** Passes error dialog handling to activity.
-     * Null title/message use the activity defaults */
+    /** Passes error dialog handling to activity. Null title/message use the activity defaults */
     private static void handleError(ArtworkListActivity activity, String title, String errorMsg) {
         activity.downloadFailed(title, errorMsg);
     }

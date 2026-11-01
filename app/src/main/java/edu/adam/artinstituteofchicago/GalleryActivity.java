@@ -23,20 +23,6 @@ import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader;
 import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
 import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog;
 
-/*
-    RecyclerView from API call has GALLERY objects, not artwork
-    - Name, floor, image
-    -- Floor is blank if no floor returned
-    -- Image is FIRST returned artwork
-
-    Tapping gallery opens Artworks
-
-    Nav on bottom:
-    - home, browse galleries, search artwork,
-    - view faves, view random artwork
-    -- Galleries icon should be red because currently on it
-
-*/
 public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
     public ActivityGalleryBinding galleryBinding;
     private LinearLayoutManager linearLayoutManager;
