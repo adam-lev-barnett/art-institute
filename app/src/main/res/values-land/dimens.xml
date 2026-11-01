@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fixes top banner taking up too much space -->
+    <dimen name="banner_logo_size">36dp</dimen>
+    <dimen name="banner_logo_margin">6dp</dimen>
+</resources>
