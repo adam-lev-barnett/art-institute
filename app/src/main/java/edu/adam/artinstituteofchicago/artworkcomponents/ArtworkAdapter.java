@@ -15,13 +15,13 @@ import java.util.List;
 import edu.adam.artinstituteofchicago.R;
 import edu.adam.artinstituteofchicago.databinding.ArtworkListRowBinding;
 
+/** Used by several different activities whose adapter instance only differs in their on-clicks/long-clicks*/
 public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkViewHolder> {
     private final List<Artwork> artworks;
-    // Listeners instead of a specific activity, so any artwork list screen can reuse this adapter
     private final View.OnClickListener clickListener;
     private final View.OnLongClickListener longClickListener;
 
-    /** Pass null for longClickListener if the screen has no long-press action */
+    /** Pass null for longClickListener if the activity has no longClick functionality */
     public ArtworkAdapter(List<Artwork> artworks,
                           View.OnClickListener clickListener,
                           View.OnLongClickListener longClickListener) {
@@ -48,7 +48,7 @@ public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkViewHolder> {
         Artwork artwork = artworks.get(position);
         holder.binding.artworkTitle.setText(artwork.getTitle());
 
-        // Rows are recycled, so the else branches have to undo a previous GONE
+        // Visibility always set because row layouts are recycled
         if (artwork.getArtistDisplay().isEmpty()) {
             holder.binding.artworkArtist.setVisibility(View.GONE);
         } else {
@@ -64,11 +64,10 @@ public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkViewHolder> {
         }
 
         if (artwork.getImageId().isEmpty()) {
-            // Cancel any load still running from this row's previous artwork
+            // Cancel any load still running from previous recycled row occupant due to async loading
             Glide.with(holder.itemView).clear(holder.binding.artworkThumbnail);
             holder.binding.artworkThumbnail.setImageResource(R.drawable.artwork_default);
         } else {
-            // The row's view ties Glide to whichever activity is showing it
             Glide.with(holder.itemView)
                     .load(ArtworkDownloader.getImageUrl(artwork.getImageId(), ArtworkDownloader.THUMBNAIL_SIZE))
                     .into(holder.binding.artworkThumbnail);

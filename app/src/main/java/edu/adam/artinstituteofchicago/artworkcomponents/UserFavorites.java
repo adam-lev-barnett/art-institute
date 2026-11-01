@@ -40,9 +40,8 @@ public abstract class UserFavorites {
     }
 
     /** @throws JsonSyntaxException if the file exists but isn't valid JSON;
-     * the caller catches it so it can show the error */
+     * the calling activity catches it so it can show the error */
     public static void loadFaves(Activity activity) {
-        // Set first so the early return and a thrown exception still count as an attempt
         loadAttempted = true;
         try {
             Context context = activity.getApplicationContext();
@@ -82,7 +81,6 @@ public abstract class UserFavorites {
                     openFileOutput(context.getString(R.string.fave_file), Context.MODE_PRIVATE);
             List<Artwork> faveListOut = new ArrayList<>(faves.values());
             PrintWriter printWriter = new PrintWriter(fos);
-            // print(list) alone writes toString() ("[Artwork@1a2b]"), which loadFaves can't parse
             printWriter.print(new Gson().toJson(faveListOut));
             printWriter.close();
             fos.close();
@@ -102,15 +100,15 @@ public abstract class UserFavorites {
         saveFaves(activity);
     }
 
-    /** A sorted copy, so the caller's list can change without touching the stored faves.
-     * HashMaps have no order, so sort by title here (the spec wants faves sorted by name) */
+
     public static List<Artwork> getFaves() {
         List<Artwork> sorted = new ArrayList<>(faves.values());
+        // sorts by name, per-spec
         sorted.sort((a, b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
         return sorted;
     }
 
-    public static boolean isLoadAttempted() {
+    public static boolean loadAttempted() {
         return loadAttempted;
     }
 }

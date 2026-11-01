@@ -70,7 +70,7 @@ public class FavoritesActivity extends AppCompatActivity
         super.onResume();
 
         // If Android killed the app and reopened it on this screen, MainActivity never loaded the faves
-        if (!UserFavorites.isLoadAttempted()) {
+        if (!UserFavorites.loadAttempted()) {
             try {
                 UserFavorites.loadFaves(this);
             } catch (JsonSyntaxException e) {

@@ -19,7 +19,6 @@ import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog;
 
 
 public class MainActivity extends AppCompatActivity {
-
     ActivityMainBinding binding;
 
     @Override
@@ -39,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigation.setUp(this, binding.bottomNav);
         setSupportActionBar(binding.topBanner.getRoot());
 
-        // Only attempt to load once per app startup
-        if (!UserFavorites.isLoadAttempted()) {
+        // Only attempt to load favorites once per app startup
+        if (!UserFavorites.loadAttempted()) {
             try {
                 UserFavorites.loadFaves(this);
             } catch(JsonSyntaxException e) {
@@ -49,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Card clicks, set with android:onClick in both layouts; same destinations as the bottom nav
-
+    /* Card clicks - opens from bottom nav and mainActivity */
     public void openGalleries(View v) {
         startActivity(new Intent(this, GalleryActivity.class));
     }

@@ -63,7 +63,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         // Rotation recreates the activity and empties the list, so run the same search again
         if (savedInstanceState != null) {
             lastSearch = savedInstanceState.getString(getString(R.string.search_extra));
-            if (lastSearch != null) ArtworkDownloader.searchArtworks(this, lastSearch);
+            if (lastSearch != null) ArtworkDownloader.search(this, lastSearch);
         }
     }
 
@@ -80,9 +80,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         binding.searchRecycler.setLayoutManager(linearLayoutManager);
     }
 
-    /** Set with android:onClick on the search icon in both layouts */
+    /** Set with onClick for the search icon. Trimming input is handled via ArtworkDownloader  */
     public void searchArtworks(View v) {
-        String keyword = binding.searchInput.getText().toString().trim();
+        String keyword = binding.searchInput.getText().toString();
 
         if (keyword.isEmpty()) {
             binding.searchInput.setError(getString(R.string.search_required));
@@ -91,13 +91,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         lastSearch = keyword;
-        ArtworkDownloader.searchArtworks(this, keyword);
+        ArtworkDownloader.search(this, keyword);
     }
 
     /** Called by ArtworkDownloader with the results for one keyword */
     public void updateData(String keyword, List<Artwork> searchResults) {
-        // A slower, older search finished after a newer one started
-        if (!keyword.equals(lastSearch)) return;
 
         results.clear();
         results.addAll(searchResults);

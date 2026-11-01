@@ -69,6 +69,7 @@ public class Artwork implements Serializable {
         return dimensions;
     }
 
+    // Included in the spec, but unused on any of the actual views
     public String getShortDescription() {
         return shortDescription;
     }
@@ -77,6 +78,7 @@ public class Artwork implements Serializable {
         return description;
     }
 
+    // Included in the spec, but unused on any of the actual views
     public String getCreditLine() {
         return creditLine;
     }
