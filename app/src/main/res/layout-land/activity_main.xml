@@ -8,75 +8,102 @@
     android:background="@color/activity_bg"
     tools:context=".MainActivity">
 
-    <include
-        android:id="@+id/bottom_nav"
-        layout="@layout/bottom_navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
+
+    <include
+        android:id="@+id/top_banner"
+        layout="@layout/top_banner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Image and heading on the left half, cards on the right half -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/main_split_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.66" />
+
+    <!-- Declared before the text and cards so they draw on top of it.
+         0dp both ways fills the left half between the banner and nav; centerCrop fills it without stretching -->
+    <ImageView
+        android:id="@+id/background_main_activity"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/main_split_guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_banner"
         app:srcCompat="@drawable/main_bg" />
 
+    <!-- Heading and subhead sit over the image's faded bottom edge, like portrait -->
     <TextView
         android:id="@+id/heading_explore_art"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/explore_art"
-        android:textColor="@color/maroon"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textColor="@color/maroon"
         android:textStyle="bold"
         android:typeface="serif"
-        app:layout_constraintBottom_toTopOf="@+id/home_subhead"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/heading_explore_art"
+        app:layout_constraintEnd_toStartOf="@+id/main_split_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/background_main_activity" />
 
     <TextView
         android:id="@+id/home_subhead"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/discover_artworks"
-        app:layout_constraintEnd_toEndOf="@+id/heading_explore_art"
-        app:layout_constraintStart_toStartOf="@+id/heading_explore_art"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toStartOf="@id/main_split_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heading_explore_art" />
 
-    <!-- 1. Browse Card -->
+    <!-- Cards: a packed vertical chain between the banner and the nav, so the group stays centered
+         in the right half and can't run into either one. Icons are smaller than the card_icon style
+         here so all three fit in landscape's shorter height -->
+
+    <!-- 1. Browse Card (chain head) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/browse_card_main_activity"
-        android:onClick="openGalleries"
         style="@style/main_activity_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:onClick="openGalleries"
         app:cardCornerRadius="12dp"
         app:layout_constraintBottom_toTopOf="@+id/gallery_card_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/home_subhead"
+        app:layout_constraintStart_toEndOf="@id/main_split_guideline"
+        app:layout_constraintTop_toBottomOf="@id/top_banner"
         app:layout_constraintVertical_chainStyle="packed">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/browse_card_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="6dp">
 
             <ImageView
                 android:id="@+id/browse_card_icon"
                 style="@style/card_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/main_activity_card_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +128,7 @@
                 android:id="@+id/browse_card_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/explore_artworks_by_gallery"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -123,32 +150,34 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- 2. Search Card (Chain Middle) -->
+    <!-- 2. Search Card (chain middle) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/gallery_card_layout"
-        android:onClick="openSearch"
         style="@style/main_activity_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:onClick="openSearch"
         app:cardCornerRadius="12dp"
         app:layout_constraintBottom_toTopOf="@+id/random_card_main_activity"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/main_split_guideline"
         app:layout_constraintTop_toBottomOf="@+id/browse_card_main_activity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/gallery_card_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="6dp">
 
             <ImageView
                 android:id="@+id/gallery_thumbnail"
                 style="@style/card_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/main_activity_card_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -173,7 +202,7 @@
                 android:id="@+id/gallery_floor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/find_art_by_keyword"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -195,31 +224,35 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Random Card -->
+    <!-- 3. Random Card (chain tail) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/random_card_main_activity"
-        android:onClick="openRandom"
         style="@style/main_activity_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-
+        android:layout_marginBottom="8dp"
+        android:onClick="openRandom"
         app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/main_split_guideline"
         app:layout_constraintTop_toBottomOf="@+id/gallery_card_layout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/random_card_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="6dp">
 
             <ImageView
                 android:id="@+id/random_card_icon"
                 style="@style/card_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/main_activity_card_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -244,7 +277,7 @@
                 android:id="@+id/random_card_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/let_us_surprise_you"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -267,12 +300,12 @@
     </androidx.cardview.widget.CardView>
 
     <include
-        android:id="@+id/top_banner"
-        layout="@layout/top_banner"
+        android:id="@+id/bottom_nav"
+        layout="@layout/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

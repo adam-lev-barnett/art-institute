@@ -29,7 +29,7 @@ public abstract class UserFavorites {
     private static final Map<Long, Artwork> faves = new HashMap<>();
 
     /** Only attempts to load faves once.
-     * If file-loading resulted in an error already, still becomes true*/
+     * If file-loading resulted in an initial error, still becomes true*/
     private static boolean loadAttempted = false;
 
     public static void addFavorite(Artwork art, Activity activity) {

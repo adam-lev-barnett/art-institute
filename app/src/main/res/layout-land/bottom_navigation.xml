@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_nav"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/home_icon"
+        style="@style/nav_icons"
+        android:contentDescription="@string/nav_home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/galleries_icon"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_home_grey"
+        app:tint="@color/icon_grey" />
+
+    <ImageView
+        android:id="@+id/galleries_icon"
+        style="@style/nav_icons"
+        android:contentDescription="@string/nav_galleries"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/search_icon"
+        app:layout_constraintStart_toEndOf="@+id/home_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_galleries_grey"
+        app:tint="@color/icon_grey" />
+
+    <ImageView
+        android:id="@+id/search_icon"
+        style="@style/nav_icons"
+        android:contentDescription="@string/nav_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fave_icon"
+        app:layout_constraintStart_toEndOf="@+id/galleries_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_search_grey"
+        app:tint="@color/icon_grey" />
+
+    <ImageView
+        android:id="@+id/fave_icon"
+        style="@style/nav_icons"
+        android:contentDescription="@string/nav_favorites"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/random_icon"
+        app:layout_constraintStart_toEndOf="@+id/search_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_favorites_grey"
+        app:tint="@color/icon_grey" />
+
+    <ImageView
+        android:id="@+id/random_icon"
+        style="@style/nav_icons"
+        android:contentDescription="@string/nav_random"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fave_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/random_grey"
+        app:tint="@color/icon_grey" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
