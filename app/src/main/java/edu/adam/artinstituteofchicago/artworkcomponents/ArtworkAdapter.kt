@@ -9,24 +9,22 @@ import com.bumptech.glide.Glide
 import edu.adam.artinstituteofchicago.R
 import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkDownloader.getImageUrl
 import edu.adam.artinstituteofchicago.databinding.ArtworkListRowBinding
+import edu.adam.artinstituteofchicago.gallerycomponents.Gallery
 
 /** Used by several different activities whose adapter instance only differs in their on-clicks/long-clicks */
 class ArtworkAdapter(
     artworks: MutableList<Artwork?>?,
     private val clickListener: View.OnClickListener?,
-    private val longClickListener: OnLongClickListener?
-) : RecyclerView.Adapter<ArtworkViewHolder?>() {
-    private val artworks = new MutableList<Artwork>
+    private val longClickListener: OnLongClickListener?,
+) : RecyclerView.Adapter<ArtworkViewHolder>() {
 
-    /** Pass null for longClickListener if the activity has no longClick functionality  */
-    init {
-        this.artworks = (artworks ?: ArrayList<Artwork>()) as MutableList<Artwork>
-    }
+    // The Elvis operator directly assigns 'artworks' if not null, or falls back to a new ArrayList
+    private val artworks: MutableList<Artwork?> = artworks ?: ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtworkViewHolder {
         val rowBinding =
             ArtworkListRowBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false
+                LayoutInflater.from(parent.context), parent, false
             )
         rowBinding.getRoot().setOnClickListener(clickListener)
         if (longClickListener != null) rowBinding.getRoot()
@@ -36,31 +34,31 @@ class ArtworkAdapter(
     }
 
     override fun onBindViewHolder(holder: ArtworkViewHolder, position: Int) {
-        val artwork = artworks.get(position)
-        holder.binding.artworkTitle.setText(artwork.getTitle())
+        val artwork = artworks[position]
+        holder.binding.artworkTitle.text = artwork?.title
 
         // Visibility always set because row layouts are recycled
-        if (artwork.getArtistDisplay().isEmpty()) {
-            holder.binding.artworkArtist.setVisibility(View.GONE)
+        if (artwork?.artistDisplay?.isEmpty() == true) {
+            holder.binding.artworkArtist.visibility = View.GONE
         } else {
-            holder.binding.artworkArtist.setVisibility(View.VISIBLE)
-            holder.binding.artworkArtist.setText(artwork.getArtistDisplay())
+            holder.binding.artworkArtist.visibility = View.VISIBLE
+            holder.binding.artworkArtist.text = artwork?.artistDisplay
         }
 
-        if (artwork.getDateDisplay().isEmpty()) {
-            holder.binding.artworkDate.setVisibility(View.GONE)
+        if (artwork?.dateDisplay?.isEmpty() == true) {
+            holder.binding.artworkDate.visibility = View.GONE
         } else {
-            holder.binding.artworkDate.setVisibility(View.VISIBLE)
-            holder.binding.artworkDate.setText(artwork.getDateDisplay())
+            holder.binding.artworkDate.visibility = View.VISIBLE
+            holder.binding.artworkDate.text = artwork?.dateDisplay
         }
 
-        if (artwork.getImageId().isEmpty()) {
+        if (artwork?.imageId?.isEmpty() == true) {
             // Cancel any load still running from previous recycled row occupant due to async loading
             Glide.with(holder.itemView).clear(holder.binding.artworkThumbnail)
             holder.binding.artworkThumbnail.setImageResource(R.drawable.artwork_default)
         } else {
             Glide.with(holder.itemView)
-                .load(getImageUrl(artwork.getImageId(), ArtworkDownloader.THUMBNAIL_SIZE))
+                .load(getImageUrl(artwork?.imageId, ArtworkDownloader.THUMBNAIL_SIZE))
                 .into(holder.binding.artworkThumbnail)
         }
     }

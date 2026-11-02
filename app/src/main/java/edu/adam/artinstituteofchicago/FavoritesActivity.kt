@@ -98,7 +98,7 @@ class FavoritesActivity : AppCompatActivity(), View.OnClickListener, OnLongClick
         AlertDialog.Builder(this)
             .setIcon(R.drawable.fav_on)
             .setTitle(R.string.remove_favorite_title)
-            .setMessage(getString(R.string.remove_favorite_message, artwork.getTitle()))
+            .setMessage(getString(R.string.remove_favorite_message, artwork.title))
             .setPositiveButton(
                 R.string.yes,
                 DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->

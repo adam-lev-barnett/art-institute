@@ -95,7 +95,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
 
         loadImage()
 
-        binding!!.detailTitle.setText(artwork!!.getTitle())
+        binding!!.detailTitle.setText(artwork!!.title)
         showArtistAndDate()
 
         if (UserFavorites.isFavorite(artwork)) {
@@ -105,34 +105,34 @@ class ArtworkDetailActivity : AppCompatActivity() {
         showOrHide(
             binding!!.detailGalleryLabel,
             binding!!.detailGallery,
-            artwork!!.getGalleryTitle()
+            artwork!!.galleryTitle
         )
         showOrHide(
             binding!!.detailMediumLabel,
             binding!!.detailMedium,
-            artwork!!.getMediumDisplay()
+            artwork!!.mediumDisplay
         )
         showOrHide(
             binding!!.detailDimensionsLabel,
             binding!!.detailDimensions,
-            artwork!!.getDimensions()
+            artwork!!.dimensions
         )
         showOrHide(
             binding!!.detailLocationLabel,
             binding!!.detailLocation,
-            artwork!!.getPlaceOfOrigin()
+            artwork!!.placeOfOrigin
         )
 
         // The API sends the description as HTML (<p>, <em>), so convert it instead of showing the tags
-        if (artwork!!.getDescription().isEmpty()) {
+        if (artwork!!.description.isEmpty()) {
             binding!!.detailDescription.setVisibility(View.GONE)
         } else {
-            binding!!.detailDescription.text = Html.fromHtml(artwork!!.getDescription(), Html.FROM_HTML_MODE_COMPACT)
+            binding!!.detailDescription.text = Html.fromHtml(artwork!!.description, Html.FROM_HTML_MODE_COMPACT)
         }
     }
 
     private fun loadImage() {
-        if (artwork!!.getImageId().isEmpty()) {
+        if (artwork!!.imageId.isEmpty()) {
             binding!!.detailImage.setImageResource(R.drawable.artwork_default)
             return
         }
@@ -141,7 +141,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
         Glide.with(this)
             .load(
                 ArtworkDownloader.getImageUrl(
-                    artwork!!.getImageId(),
+                    artwork!!.imageId,
                     ArtworkDownloader.FULL_SIZE
                 )
             )
@@ -149,7 +149,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
                 Glide.with(this)
                     .load(
                         ArtworkDownloader.getImageUrl(
-                            artwork!!.getImageId(),
+                            artwork!!.imageId,
                             ArtworkDownloader.FALLBACK_SIZE
                         )
                     )
@@ -160,9 +160,9 @@ class ArtworkDetailActivity : AppCompatActivity() {
 
     private fun showArtistAndDate() {
         val artist =
-            artwork!!.getArtistDisplay().split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+            artwork!!.artistDisplay.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()[0]
-        val date = artwork!!.getDateDisplay()
+        val date = artwork!!.dateDisplay
 
         if (artist.isEmpty() && date.isEmpty()) {
             binding!!.detailArtistDate.setVisibility(View.GONE)

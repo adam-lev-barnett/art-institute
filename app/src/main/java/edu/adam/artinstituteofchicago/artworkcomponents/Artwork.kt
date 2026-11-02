@@ -1,89 +1,26 @@
-package edu.adam.artinstituteofchicago.artworkcomponents;
+package edu.adam.artinstituteofchicago.artworkcomponents
 
-import java.io.Serializable;
+import java.io.Serializable
 
 /** One artwork from the /artworks/search endpoint.
- * Serializable so it can be passed to ArtworkDetailActivity with putExtra. */
-public class Artwork implements Serializable {
-
-    private final long id;
-    private final String title;
-    private final String artistDisplay;
-    private final String dateDisplay;
-    private final String mediumDisplay;
-    private final String placeOfOrigin;
-    private final String imageId;
-    private final String dimensions;
-    private final String shortDescription;
-    private final String description;
-    private final String creditLine;
-    private final String galleryTitle;
-
-    public Artwork(long id, String title, String artistDisplay, String dateDisplay,
-                   String mediumDisplay, String placeOfOrigin, String imageId,
-                   String dimensions, String shortDescription, String description,
-                   String creditLine, String galleryTitle) {
-        this.id = id;
-        this.imageId = imageId;
-        this.title = title;
-        this.artistDisplay = artistDisplay;
-        this.dateDisplay = dateDisplay;
-        this.mediumDisplay = mediumDisplay;
-        this.placeOfOrigin = placeOfOrigin;
-        this.dimensions = dimensions;
-        this.shortDescription = shortDescription;
-        this.description = description;
-        this.creditLine = creditLine;
-        this.galleryTitle = galleryTitle;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArtistDisplay() {
-        return artistDisplay;
-    }
-
-    public String getDateDisplay() {
-        return dateDisplay;
-    }
-
-    public String getMediumDisplay() {
-        return mediumDisplay;
-    }
-
-    public String getPlaceOfOrigin() {
-        return placeOfOrigin;
-    }
-
-    public String getImageId() {
-        return imageId;
-    }
-
-    public String getDimensions() {
-        return dimensions;
-    }
+ * Serializable so it can be passed to ArtworkDetailActivity with putExtra.  */
+class Artwork(
+    val id: Long, val title: String?, val artistDisplay: String?, val dateDisplay: String?,
+    val mediumDisplay: String?, val placeOfOrigin: String?, val imageId: String?,
+    val dimensions: String?, // Included in the spec but unused on any of the actual views
+    var shortDescription: String?, description: String?,
+    creditLine: String?, galleryTitle: String?
+) : Serializable {
+    val description: String?
 
     // Included in the spec but unused on any of the actual views
-    public String getShortDescription() {
-        return shortDescription;
-    }
+    val creditLine: String?
+    val galleryTitle: String?
 
-    public String getDescription() {
-        return description;
-    }
-
-    // Included in the spec but unused on any of the actual views
-    public String getCreditLine() {
-        return creditLine;
-    }
-
-    public String getGalleryTitle() {
-        return galleryTitle;
+    init {
+        this.shortDescription = shortDescription
+        this.description = description
+        this.creditLine = creditLine
+        this.galleryTitle = galleryTitle
     }
 }
