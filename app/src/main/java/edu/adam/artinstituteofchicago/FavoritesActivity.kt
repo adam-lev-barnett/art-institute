@@ -1,125 +1,126 @@
-package edu.adam.artinstituteofchicago;
+package edu.adam.artinstituteofchicago
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.View.OnLongClickListener
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonSyntaxException
+import edu.adam.artinstituteofchicago.artworkcomponents.Artwork
+import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkAdapter
+import edu.adam.artinstituteofchicago.artworkcomponents.UserFavorites
+import edu.adam.artinstituteofchicago.databinding.ActivityFavoritesBinding
+import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation
+import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class FavoritesActivity : AppCompatActivity(), View.OnClickListener, OnLongClickListener {
+    var binding: ActivityFavoritesBinding? = null
+    private var adapter: ArtworkAdapter? = null
+    private val faves: MutableList<Artwork> = ArrayList<Artwork>()
 
-import com.google.gson.JsonSyntaxException;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.enableEdgeToEdge()
+        binding = ActivityFavoritesBinding.inflate(layoutInflater)
+        setContentView(binding!!.getRoot())
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding!!.getRoot(),
+            OnApplyWindowInsetsListener { v: View?, insets: WindowInsetsCompat? ->
+                val systemBars = insets!!.getInsets(WindowInsetsCompat.Type.systemBars())
+                v!!.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            })
 
-import java.util.ArrayList;
-import java.util.List;
+        BottomNavigation.setUp(this, binding!!.bottomNav)
+        setSupportActionBar(binding!!.topBanner.getRoot())
 
-import edu.adam.artinstituteofchicago.artworkcomponents.Artwork;
-import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkAdapter;
-import edu.adam.artinstituteofchicago.artworkcomponents.UserFavorites;
-import edu.adam.artinstituteofchicago.databinding.ActivityFavoritesBinding;
-import edu.adam.artinstituteofchicago.uicomponents.BottomNavigation;
-import edu.adam.artinstituteofchicago.uicomponents.ErrorDialog;
-
-public class FavoritesActivity extends AppCompatActivity
-        implements View.OnClickListener, View.OnLongClickListener {
-
-    private static final String TAG = "FavoritesActivity";
-    public ActivityFavoritesBinding binding;
-    private ArtworkAdapter adapter;
-    private final List<Artwork> faves = new ArrayList<>();
-
-    private LinearLayoutManager linearLayoutManager;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        binding = ActivityFavoritesBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        BottomNavigation.setUp(this, binding.bottomNav);
-        setSupportActionBar(binding.topBanner.getRoot());
-
-        setUpFavesRecycler();
+        setUpFavesRecycler()
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    override fun onResume() {
+        super.onResume()
 
         if (!UserFavorites.loadAttempted()) {
             try {
-                UserFavorites.loadFaves(this);
-            } catch (JsonSyntaxException e) {
+                UserFavorites.loadFaves(this)
+            } catch (e: JsonSyntaxException) {
                 // Faves couldn't be read, so the list stays empty and shows the no-favorites message
-                Log.d(TAG, "onResume: " + e.getMessage());
-                ErrorDialog.show(this, getString(R.string.favorites_error), getString(R.string.favorites_load_failed));
+                Log.d(TAG, "onResume: " + e.message)
+                ErrorDialog.show(
+                    this,
+                    getString(R.string.favorites_error),
+                    getString(R.string.favorites_load_failed)
+                )
             }
         }
 
-        faves.clear();
-        faves.addAll(UserFavorites.getFaves());
-        adapter.notifyDataSetChanged();
-        showEmptyMessageIfNoFaves();
+        faves.clear()
+        faves.addAll(UserFavorites.getFaves())
+        adapter!!.notifyDataSetChanged()
+        showEmptyMessageIfNoFaves()
     }
 
-    private void setUpFavesRecycler() {
-        this.adapter = new ArtworkAdapter(faves, this, this);
-        this.linearLayoutManager = new LinearLayoutManager(this);
-        binding.favesRecycler.setAdapter(adapter);
-        binding.favesRecycler.setLayoutManager(linearLayoutManager);
+    private fun setUpFavesRecycler() {
+        this.adapter = ArtworkAdapter(faves, this, this)
+        val linearLayoutManager = LinearLayoutManager(this)
+        binding!!.favesRecycler.setAdapter(adapter)
+        binding!!.favesRecycler.setLayoutManager(linearLayoutManager)
     }
 
-    private void showEmptyMessageIfNoFaves() {
-        binding.favesEmpty.setVisibility(faves.isEmpty() ? View.VISIBLE : View.GONE);
+    private fun showEmptyMessageIfNoFaves() {
+        binding!!.favesEmpty.visibility = if (faves.isEmpty()) View.VISIBLE else View.GONE
     }
 
-    @Override
-    public void onClick(View v) {
-        int pos = binding.favesRecycler.getChildLayoutPosition(v);
-        if (pos == RecyclerView.NO_POSITION) return;
+    override fun onClick(v: View) {
+        val pos = binding!!.favesRecycler.getChildLayoutPosition(v)
+        if (pos == RecyclerView.NO_POSITION) return
 
-        Intent intent = new Intent(this, ArtworkDetailActivity.class);
-        intent.putExtra(getString(R.string.artwork), faves.get(pos));
-        startActivity(intent);
+        val intent = Intent(this, ArtworkDetailActivity::class.java)
+        intent.putExtra(getString(R.string.artwork), faves.get(pos))
+        startActivity(intent)
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        int pos = binding.favesRecycler.getChildLayoutPosition(v);
-        if (pos == RecyclerView.NO_POSITION) return false;
+    override fun onLongClick(v: View): Boolean {
+        val pos = binding!!.favesRecycler.getChildLayoutPosition(v)
+        if (pos == RecyclerView.NO_POSITION) return false
 
-        Artwork artwork = faves.get(pos);
+        val artwork = faves.get(pos)
 
-        new AlertDialog.Builder(this)
-                .setIcon(R.drawable.fav_on)
-                .setTitle(R.string.remove_favorite_title)
-                .setMessage(getString(R.string.remove_favorite_message, artwork.getTitle()))
-                .setPositiveButton(R.string.yes, (dialog, which) -> removeFave(artwork))
-                .setNegativeButton(R.string.no, null)
-                .show();
+        AlertDialog.Builder(this)
+            .setIcon(R.drawable.fav_on)
+            .setTitle(R.string.remove_favorite_title)
+            .setMessage(getString(R.string.remove_favorite_message, artwork.getTitle()))
+            .setPositiveButton(
+                R.string.yes,
+                DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
+                    removeFave(artwork)
+                })
+            .setNegativeButton(R.string.no, null)
+            .show()
 
-        return true;
+        return true
     }
 
-    private void removeFave(Artwork artwork) {
-        int pos = faves.indexOf(artwork);
-        if (pos == -1) return;
+    private fun removeFave(artwork: Artwork) {
+        val pos = faves.indexOf(artwork)
+        if (pos == -1) return
 
-        UserFavorites.removeFave(artwork, this);
-        faves.remove(pos);
-        adapter.notifyItemRemoved(pos);
-        showEmptyMessageIfNoFaves();
+        UserFavorites.removeFave(artwork, this)
+        faves.removeAt(pos)
+        adapter!!.notifyItemRemoved(pos)
+        showEmptyMessageIfNoFaves()
+    }
+
+    companion object {
+        private const val TAG = "FavoritesActivity"
     }
 }
