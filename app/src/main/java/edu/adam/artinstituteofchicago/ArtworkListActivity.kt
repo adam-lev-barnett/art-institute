@@ -51,7 +51,7 @@ class ArtworkListActivity : AppCompatActivity(), View.OnClickListener {
             )
         }
 
-        if (gallery != null) ArtworkDownloader.getSourceData(this, gallery!!.getId())
+        if (gallery != null) ArtworkDownloader.getSourceData(this, gallery!!.id)
 
         setUpArtworkRecycler()
         showGalleryInfo()
@@ -77,17 +77,17 @@ class ArtworkListActivity : AppCompatActivity(), View.OnClickListener {
             binding!!.floorDot.visibility = View.GONE
             binding!!.artworksFloor.visibility = View.GONE
         } else {
-            binding!!.artworksFloor.text = getString(R.string.floor_label, gallery!!.getFloor())
+            binding!!.artworksFloor.text = getString(R.string.floor_label, gallery!!.floor)
         }
 
         // No count until artworks arrive
         binding!!.artworkCountDot.visibility = View.INVISIBLE
         binding!!.artworksCount.visibility = View.INVISIBLE
 
-        if (gallery!!.source_updated_at.isEmpty()) {
+        if (gallery!!.updatedAt.isEmpty()) {
             binding!!.lastUpdate.visibility = View.GONE
         } else {
-            binding!!.lastUpdate.text = getString(R.string.last_update, formatLastUpdate(gallery!!.getSource_updated_at()))
+            binding!!.lastUpdate.text = getString(R.string.last_update, formatLastUpdate(gallery!!.updatedAt))
         }
     }
 

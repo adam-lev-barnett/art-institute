@@ -1,222 +1,215 @@
-package edu.adam.artinstituteofchicago.gallerycomponents;
+package edu.adam.artinstituteofchicago.gallerycomponents
 
-import android.net.Uri;
-import android.util.Log;
+import android.util.Log
+import com.android.volley.AuthFailureError
+import com.android.volley.NoConnectionError
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import edu.adam.artinstituteofchicago.GalleryActivity
+import edu.adam.artinstituteofchicago.R
+import org.json.JSONException
+import org.json.JSONObject
+import androidx.core.net.toUri
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+object GalleryDownloader {
+    private var galleryActivity: GalleryActivity? = null
+    private const val TAG = "GalleryDownloader"
+    private const val BASE_URL = "https://api.artic.edu/api/v1/galleries"
+    private const val FIELDS = "id,title,number,floor,is_closed,source_updated_at"
+    private const val startingPage = "1"
+    private var rq: RequestQueue? = null
+    private var listener: Response.Listener<JSONObject?>? = null
+    private var errorListener: Response.ErrorListener? = null
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+    private const val ARTWORK_SEARCH_URL = "https://api.artic.edu/api/v1/artworks/search"
+    private const val THUMBNAIL_FIELDS = "id,image_id"
+    private const val THUMBNAIL_LIMIT = "1"
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import edu.adam.artinstituteofchicago.GalleryActivity;
-import edu.adam.artinstituteofchicago.R;
-
-public class GalleryDownloader {
-    private static GalleryActivity galleryActivity;
-    private static final String TAG = "GalleryDownloader";
-    private static final String BASE_URL = "https://api.artic.edu/api/v1/galleries";
-    private static final String FIELDS = "id,title,number,floor,is_closed,source_updated_at";
-    private static String startingPage = "1";
-    private static RequestQueue rq;
-    private static Response.Listener<JSONObject> listener;
-    private static Response.ErrorListener errorListener;
-
-    private static final String ARTWORK_SEARCH_URL = "https://api.artic.edu/api/v1/artworks/search";
-    private static final String THUMBNAIL_FIELDS = "id,image_id";
-    private static final String THUMBNAIL_LIMIT = "1";
-
-    private static String buildUrl() {
-        return Uri.parse(BASE_URL).buildUpon()
-                .appendQueryParameter("fields", FIELDS)
-                .appendQueryParameter("limit", galleryActivity.getString(R.string.page_limit))
-                .appendQueryParameter("page", startingPage)
-                .build()
-                .toString();
+    private fun buildUrl(): String {
+        return BASE_URL.toUri().buildUpon()
+            .appendQueryParameter("fields", FIELDS)
+            .appendQueryParameter("limit", galleryActivity!!.getString(R.string.page_limit))
+            .appendQueryParameter("page", startingPage)
+            .build()
+            .toString()
     }
 
-    private static String buildThumbnailUrl(long galleryId) {
-        return Uri.parse(ARTWORK_SEARCH_URL).buildUpon()
-                .appendQueryParameter("query[term][gallery_id]", String.valueOf(galleryId))
-                .appendQueryParameter("fields", THUMBNAIL_FIELDS)
-                // Only the first artwork is needed
-                .appendQueryParameter("limit", THUMBNAIL_LIMIT)
-                .appendQueryParameter("page", startingPage)
-                .build()
-                .toString();
+    private fun buildThumbnailUrl(galleryId: Long): String {
+        return ARTWORK_SEARCH_URL.toUri().buildUpon()
+            .appendQueryParameter("query[term][gallery_id]", galleryId.toString())
+            .appendQueryParameter("fields", THUMBNAIL_FIELDS) // Only the first artwork is needed
+            .appendQueryParameter("limit", THUMBNAIL_LIMIT)
+            .appendQueryParameter("page", startingPage)
+            .build()
+            .toString()
     }
 
-    public static void getSourceData(GalleryActivity activity) {
-        galleryActivity = activity;
-        if (rq == null) rq = Volley.newRequestQueue(galleryActivity);
+    fun getSourceData(activity: GalleryActivity) {
+        galleryActivity = activity
+        if (rq == null) rq = Volley.newRequestQueue(galleryActivity)
 
-        listener = response -> {
+        listener = Response.Listener { response: JSONObject? ->
             try {
-                handleResults(galleryActivity, response.toString());
-            } catch (JSONException e) {
-                handleError(galleryActivity, null, null);
+                GalleryDownloader.handleResults(galleryActivity!!, response.toString())
+            } catch (e: JSONException) {
+                GalleryDownloader.handleError(galleryActivity!!, null, null)
             }
-        };
+        }
 
-        errorListener = err -> {
+        errorListener = Response.ErrorListener { err: VolleyError? ->
             // Volley's error class names the AlertDialog
-            String title = err.getClass().getSimpleName();
-            String message = err.getMessage();
-            if (err instanceof NoConnectionError) {
-                message = galleryActivity.getString(R.string.no_connection);
+            val title = err!!.javaClass.getSimpleName()
+            var message = err.message
+            if (err is NoConnectionError) {
+                message = galleryActivity!!.getString(R.string.no_connection)
             } else if (err.networkResponse != null && err.networkResponse.data != null) {
                 try {
                     // Build error json object
-                    JSONObject errorJson = new JSONObject(new String(err.networkResponse.data));
-                    message = errorJson.getString("message");
-                } catch (JSONException ignored) {
+                    val errorJson = JSONObject(String(err.networkResponse.data))
+                    message = errorJson.getString("message")
+                } catch (ignored: JSONException) {
                     // Keeps Volley's message; the dialog still shows
                 }
             }
-            handleError(galleryActivity, title, message);
-        };
+            GalleryDownloader.handleError(galleryActivity!!, title, message)
+        }
 
-        String queryUrl = buildUrl();
+        val queryUrl = buildUrl()
 
-        requestGET(queryUrl, listener, errorListener);
+        requestGET(queryUrl, listener, errorListener)
     }
 
-    /** Looks up the first artwork in a gallery and saves its image id on the Gallery for the thumbnail */
-    public static void getGalleryThumbnail(Gallery gallery, int position) {
-        if (rq == null) rq = Volley.newRequestQueue(galleryActivity);
+    /** Looks up the first artwork in a gallery and saves its image id on the Gallery for the thumbnail  */
+    @JvmStatic
+    fun getGalleryThumbnail(gallery: Gallery, position: Int) {
+        if (rq == null) rq = Volley.newRequestQueue(galleryActivity)
 
         // Async, so each one has to remember which gallery and row it belongs to
-        Response.Listener<JSONObject> thumbnailListener = response -> {
+        val thumbnailListener = Response.Listener { response: JSONObject? ->
             try {
-                JSONArray data = response.getJSONArray("data");
+                val data = response!!.getJSONArray("data")
                 // Empty gallery: leave the image id blank so the default image shows
-                if (data.length() == 0) return;
+                if (data.length() == 0) return@Listener
 
-                JSONObject firstArtwork = data.getJSONObject(0);
+                val firstArtwork = data.getJSONObject(0)
                 if (!firstArtwork.isNull("image_id")) {
-                    gallery.setImageId(firstArtwork.getString("image_id"));
-                    galleryActivity.updateGalleryThumbnail(position);
+                    gallery.imageId = firstArtwork.getString("image_id")
+                    galleryActivity!!.updateGalleryThumbnail(position)
                 }
-            } catch (JSONException e) {
-                Log.d(TAG, "getGalleryThumbnail: " + e.getMessage());
+            } catch (e: JSONException) {
+                Log.d(TAG, "getGalleryThumbnail: " + e.message)
             }
-        };
+        }
 
         // Failed thumbnail keeps the default image and retries the next time its row is bound
-        Response.ErrorListener thumbnailErrorListener = err -> {
-            gallery.setThumbnailFetched(false);
-            Log.d(TAG, "getGalleryThumbnail: " + gallery.getTitle() + " " + err.getMessage());
-        };
+        val thumbnailErrorListener = Response.ErrorListener { err: VolleyError? ->
+            gallery.isThumbnailFetched = false
+            Log.d(TAG, "getGalleryThumbnail: " + gallery.title + " " + err!!.message)
+        }
 
-        requestGET(buildThumbnailUrl(gallery.getId()), thumbnailListener, thumbnailErrorListener);
+        requestGET(buildThumbnailUrl(gallery.id), thumbnailListener, thumbnailErrorListener)
     }
 
-    private static void requestGET(String query,
-                                   Response.Listener<JSONObject> onResponse,
-                                   Response.ErrorListener onError) {
-        JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, query, null, onResponse, onError) {
+    private fun requestGET(
+        query: String?,
+        onResponse: Response.Listener<JSONObject?>?,
+        onError: Response.ErrorListener?
+    ) {
+        val request: JsonObjectRequest =
+            object : JsonObjectRequest(Method.GET, query, null, onResponse, onError) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): MutableMap<String?, String?> {
+                    val headers: MutableMap<String?, String?> = HashMap<String?, String?>()
 
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> headers = new HashMap<>();
+                    headers["User-Agent"] = "AICGalleryApp/1.0 (Android; Educational Project)"
+                    headers["AIC-User-Agent"] = "AICGalleryApp/1.0 (Android; Educational Project)"
+                    headers["Accept"] = "application/json"
 
-                        headers.put("User-Agent",
-                                "AICGalleryApp/1.0 (Android; Educational Project)");
-                        headers.put("AIC-User-Agent",
-                                "AICGalleryApp/1.0 (Android; Educational Project)");
-                        headers.put("Accept", "application/json");
-
-                        return headers;
-                    }
-                };
-
-        rq.add(request);
-    }
-
-    private static List<Gallery> parseJsonArray(String jsonString) throws JSONException {
-
-        List<Gallery> galleries = new ArrayList<>();
-
-        try {
-            JSONObject response = new JSONObject(jsonString);
-            JSONArray jsonGalleries = response.getJSONArray("data");
-
-            for (int i = 0; i < jsonGalleries.length(); i++) {
-                try {
-                    Gallery gallery = galleryFactory(jsonGalleries.getJSONObject(i));
-                    galleries.add(gallery);
-                } catch (Exception e) {
-                    Log.d(TAG, "Error parsing JSON object " + i);
+                    return headers
                 }
             }
-            return galleries;
 
-        } catch (JSONException e) {
-            handleError(galleryActivity, null, null);
-        }
-
-        return null;
+        rq!!.add<JSONObject?>(request)
     }
 
-    private static void loadNextPageIfPresent(String jsonString) {
+    @Throws(JSONException::class)
+    private fun parseJsonArray(jsonString: String): MutableList<Gallery?>? {
+        val galleries: MutableList<Gallery?> = ArrayList<Gallery?>()
+
         try {
-            JSONObject response = new JSONObject(jsonString);
-            JSONObject pagination = response.getJSONObject("pagination");
-            if (pagination.has("next_url")) requestGET(pagination.getString("next_url"), listener, errorListener);
+            val response = JSONObject(jsonString)
+            val jsonGalleries = response.getJSONArray("data")
 
-        } catch (JSONException e) {
-            handleError(galleryActivity, null, null);
+            for (i in 0..<jsonGalleries.length()) {
+                try {
+                    val gallery = galleryFactory(jsonGalleries.getJSONObject(i))
+                    galleries.add(gallery)
+                } catch (e: Exception) {
+                    Log.d(TAG, "Error parsing JSON object $i")
+                }
+            }
+            return galleries
+        } catch (e: JSONException) {
+            GalleryDownloader.handleError(galleryActivity!!, null, null)
+        }
+
+        return null
+    }
+
+    private fun loadNextPageIfPresent(jsonString: String) {
+        try {
+            val response = JSONObject(jsonString)
+            val pagination = response.getJSONObject("pagination")
+            if (pagination.has("next_url")) requestGET(
+                pagination.getString("next_url"),
+                listener,
+                errorListener
+            )
+        } catch (e: JSONException) {
+            GalleryDownloader.handleError(galleryActivity!!, null, null)
         }
     }
 
-    /** Builds Gallery from JSONObject with available fields; returns empty strings if field not available*/
-    private static Gallery galleryFactory(JSONObject json) throws JSONException {
-        long id = json.getLong("id");
-        String title = "";
-        String number = "";
-        String floor = "";
-        boolean is_closed = json.optBoolean("is_closed", false);
-        String source_updated_at = "";
+    /** Builds Gallery from JSONObject with available fields; returns empty strings if field not available */
+    @Throws(JSONException::class)
+    private fun galleryFactory(json: JSONObject): Gallery {
+        val id = json.getLong("id")
+        var title = ""
+        var number = ""
+        var floor = ""
+        val is_closed = json.optBoolean("is_closed", false)
+        var source_updated_at = ""
 
-        if (json.has("title")) title = json.getString("title");
-        if (json.has("number")) number = json.getString("number");
-        if (json.has("floor")) floor = json.getString("floor");
-        if (json.has("source_updated_at")) source_updated_at = json.getString("source_updated_at");
+        if (json.has("title")) title = json.getString("title")
+        if (json.has("number")) number = json.getString("number")
+        if (json.has("floor")) floor = json.getString("floor")
+        if (json.has("source_updated_at")) source_updated_at = json.getString("source_updated_at")
 
-        return new Gallery(id, title, number, floor, is_closed, source_updated_at);
+        return Gallery(id, title, number, floor, source_updated_at)
     }
 
-    /** Only parses the data if it exists */
-    private static void handleResults(GalleryActivity activity, String json) throws JSONException {
+    /** Only parses the data if it exists  */
+    @Throws(JSONException::class)
+    private fun handleResults(activity: GalleryActivity, json: String?) {
         if (json == null) {
-            handleError(activity, null, null);
-            return;
+            handleError(activity, null, null)
+            return
         }
 
-        List<Gallery> galleryList = parseJsonArray(json);
+        val galleryList = parseJsonArray(json)
 
-        if (galleryList != null) activity.runOnUiThread(() -> {
-            activity.updateData(galleryList);
-        });
+        if (galleryList != null) activity.runOnUiThread(Runnable {
+            activity.updateData(galleryList)
+        })
 
-        loadNextPageIfPresent(json);
+        loadNextPageIfPresent(json)
     }
 
-    /** Passes error dialog handling to activity; null title/message use the activity's defaults */
-    private static void handleError(GalleryActivity activity, String title, String errorMsg) {
-        activity.runOnUiThread(() -> activity.downloadFailed(title, errorMsg));
+    /** Passes error dialog handling to activity; null title/message use the activity's defaults  */
+    private fun handleError(activity: GalleryActivity, title: String?, errorMsg: String?) {
+        activity.runOnUiThread(Runnable { activity.downloadFailed(title, errorMsg) })
     }
-
 }

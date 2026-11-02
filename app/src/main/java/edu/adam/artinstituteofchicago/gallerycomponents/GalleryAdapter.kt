@@ -1,72 +1,65 @@
-package edu.adam.artinstituteofchicago.gallerycomponents;
+package edu.adam.artinstituteofchicago.gallerycomponents
 
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import edu.adam.artinstituteofchicago.GalleryActivity
+import edu.adam.artinstituteofchicago.R
+import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkDownloader
+import edu.adam.artinstituteofchicago.databinding.GalleryListRowBinding
+import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader.getGalleryThumbnail
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class GalleryAdapter(galleries: MutableList<Gallery?>?, private val galleryAct: GalleryActivity) :
+    RecyclerView.Adapter<GalleryViewHolder?>() {
+    private var galleries: MutableList<Gallery> = ArrayList<Gallery>();
 
-import com.bumptech.glide.Glide;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
+        val rowBinding =
+            GalleryListRowBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false
+            )
+        rowBinding.getRoot().setOnClickListener(galleryAct)
 
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.adam.artinstituteofchicago.GalleryActivity;
-import edu.adam.artinstituteofchicago.R;
-import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkDownloader;
-import edu.adam.artinstituteofchicago.databinding.GalleryListRowBinding;
-
-public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
-    private final List<Gallery> galleries;
-    private final GalleryActivity galleryAct;
-    public GalleryAdapter(List<Gallery> galleries, GalleryActivity galleryActivity) {
-        this.galleries = galleries == null ? new ArrayList<>() : galleries;
-        this.galleryAct = galleryActivity;
+        return GalleryViewHolder(rowBinding)
     }
 
-    @NonNull
-    @Override
-    public GalleryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        GalleryListRowBinding rowBinding =
-                GalleryListRowBinding.inflate(
-                        LayoutInflater.from(parent.getContext()), parent, false
-                );
-        rowBinding.getRoot().setOnClickListener(galleryAct);
+    override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
+        val gallery = galleries[position]
+        holder.binding.galleryId.text = gallery.title
 
-        return new GalleryViewHolder(rowBinding);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull GalleryViewHolder holder, int position) {
-        Gallery gallery = galleries.get(position);
-        holder.binding.galleryId.setText(gallery.getTitle());
-
-        if (gallery.getFloor().isEmpty()) {
-            holder.binding.galleryFloor.setText("");
+        if (gallery.floor.isEmpty()) {
+            holder.binding.galleryFloor.text = ""
         } else {
-            holder.binding.galleryFloor.setText(galleryAct.getString(R.string.floor_label, gallery.getFloor()));
+            holder.binding.galleryFloor.text = galleryAct.getString(
+                R.string.floor_label,
+                gallery.floor
+            )
         }
 
-        if (gallery.getImageId().isEmpty()) {
+        if (gallery.imageId.isEmpty()) {
             // Cancel any load still running from this row's previous gallery
-            Glide.with(galleryAct).clear(holder.binding.galleryThumbnail);
-            holder.binding.galleryThumbnail.setImageResource(R.drawable.artwork_default);
-        }
-        else {
+            Glide.with(galleryAct).clear(holder.binding.galleryThumbnail)
+            holder.binding.galleryThumbnail.setImageResource(R.drawable.artwork_default)
+        } else {
             Glide.with(galleryAct)
-                    .load(ArtworkDownloader.getImageUrl(gallery.getImageId(), ArtworkDownloader.THUMBNAIL_SIZE))
-                    .into(holder.binding.galleryThumbnail);
+                .load(
+                    ArtworkDownloader.getImageUrl(
+                        gallery.imageId,
+                        ArtworkDownloader.THUMBNAIL_SIZE
+                    )
+                )
+                .into(holder.binding.galleryThumbnail)
         }
 
         // Only request a thumbnail once its row is on screen, so the requests stay under the API rate limit
-        if (!gallery.isThumbnailFetched()) {
-            gallery.setThumbnailFetched(true);
-            GalleryDownloader.getGalleryThumbnail(gallery, position);
+        if (!gallery.isThumbnailFetched) {
+            gallery.isThumbnailFetched = true
+            getGalleryThumbnail(gallery, position)
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return galleries.size();
+    override fun getItemCount(): Int {
+        return galleries.size
     }
 }
