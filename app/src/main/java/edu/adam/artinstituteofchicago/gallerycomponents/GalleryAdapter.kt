@@ -10,14 +10,14 @@ import edu.adam.artinstituteofchicago.artworkcomponents.ArtworkDownloader
 import edu.adam.artinstituteofchicago.databinding.GalleryListRowBinding
 import edu.adam.artinstituteofchicago.gallerycomponents.GalleryDownloader.getGalleryThumbnail
 
-class GalleryAdapter(galleries: MutableList<Gallery?>?, private val galleryAct: GalleryActivity) :
+class GalleryAdapter(galleryList: MutableList<Gallery?>?, private val galleryAct: GalleryActivity) :
     RecyclerView.Adapter<GalleryViewHolder?>() {
-    private var galleries: MutableList<Gallery> = ArrayList<Gallery>();
-
+    // Assigns an empty ArrayList if galleries is null, otherwise uses the passed list
+    private val galleryList: MutableList<Gallery?> = galleryList ?: mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val rowBinding =
             GalleryListRowBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false
+                LayoutInflater.from(parent.context), parent, false
             )
         rowBinding.getRoot().setOnClickListener(galleryAct)
 
@@ -25,19 +25,17 @@ class GalleryAdapter(galleries: MutableList<Gallery?>?, private val galleryAct: 
     }
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
-        val gallery = galleries[position]
-        holder.binding.galleryId.text = gallery.title
-
-        if (gallery.floor.isEmpty()) {
+        val gallery = galleryList[position]
+        holder.binding.galleryId.text = (gallery?.title ?: if (gallery?.floor!!.isEmpty()) {
             holder.binding.galleryFloor.text = ""
         } else {
             holder.binding.galleryFloor.text = galleryAct.getString(
                 R.string.floor_label,
                 gallery.floor
             )
-        }
+        }) as CharSequence?
 
-        if (gallery.imageId.isEmpty()) {
+        if (gallery.imageId!!.isEmpty()) {
             // Cancel any load still running from this row's previous gallery
             Glide.with(galleryAct).clear(holder.binding.galleryThumbnail)
             holder.binding.galleryThumbnail.setImageResource(R.drawable.artwork_default)
@@ -60,6 +58,6 @@ class GalleryAdapter(galleries: MutableList<Gallery?>?, private val galleryAct: 
     }
 
     override fun getItemCount(): Int {
-        return galleries.size
+        return galleryList.size
     }
 }
