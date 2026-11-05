@@ -7,6 +7,24 @@ All gallery and artwork content is pulled live from the
 
 **Author:** Adam Barnett
 
+## Screenshots
+<table>
+  <tr>
+    <td align="center"><img src="app/screenshots/home_screen.png" alt="Home Activity" title="Home Activity" width="250"><br>Home</td>
+    <td align="center"><img src="app/screenshots/gallery_screen.png" alt="Gallery Activity" title="Gallery Activity" width="250"><br>Galleries</td>
+    <td align="center"><img src="app/screenshots/artworks_screen.png" alt="Artwork List Activity" title="Artwork List Activity" width="250"><br>Artworks</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="app/screenshots/art_detail_screen.png" alt="Art Detail Activity" title="Art Detail Activity" width="250"><br>Artwork Detail</td>
+    <td align="center"><img src="app/screenshots/search_screen.png" alt="Search Activity" title="Search Activity" width="250"><br>Search</td>
+    <td align="center"><img src="app/screenshots/favorites_screen.png" alt="Favorites Activity" title="Favorites Activity" width="250"><br>Favorites</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="app/screenshots/remove_favorite_screen.png" alt="Remove Favorite Dialog" title="Remove Favorite Dialog" width="250"><br>Remove Favorite</td>
+  </tr>
+</table>
+
+
 ## Features
 
 ### Base app
@@ -20,7 +38,7 @@ All gallery and artwork content is pulled live from the
   the title, artist and date, gallery, medium, dimensions, location, and description in a
   ScrollView. Fields the API doesn't provide are hidden along with their labels.
 
-### Additional functionality (all three completed)
+### Additional functionality 
 - **Search (`SearchActivity`)** – Keyword search across the collection. Shows a "No Results"
   dialog when nothing matches.
 - **Favorites (`FavoritesActivity`)** – Tap the heart on the detail screen to favorite an
